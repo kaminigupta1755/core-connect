@@ -1,6 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight, Play, Star, Download, Users, Sparkles, Crown, Handshake,
   ShoppingBag, Network, PenTool, ShieldCheck, Zap, TrendingUp, KeyRound,
@@ -11,21 +9,21 @@ import {
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 
-import { getMarketplace, type MarketProduct, type MarketIndustry, type MarketVendor } from "@/lib/marketplace.functions";
+type MarketProduct = { name:string; industry_label?:string|null; price_label:string; price_period?:string|null; rating:number|string; downloads_label?:string|null; downloads:number; badge?:string|null; icon?:string|null };
 import { resolveIcon } from "@/lib/marketplace-icons";
-import heroErp from "@/assets/hero-erp.jpg";
-import indEducation from "@/assets/ind-education.jpg";
-import indHealthcare from "@/assets/ind-healthcare.jpg";
-import indRetail from "@/assets/ind-retail.jpg";
-import indManufacturing from "@/assets/ind-manufacturing.jpg";
-import indConstruction from "@/assets/ind-construction.jpg";
-import indHotel from "@/assets/ind-hotel.jpg";
-import indTransport from "@/assets/ind-transport.jpg";
-import indFinance from "@/assets/ind-finance.jpg";
-import indNgo from "@/assets/ind-ngo.jpg";
-import indRealestate from "@/assets/ind-realestate.jpg";
-import indLegal from "@/assets/ind-legal.jpg";
-import indGovernment from "@/assets/ind-government.jpg";
+import heroErp from "@/assets/vnc/hero-erp.jpg";
+import indEducation from "@/assets/vnc/ind-education.jpg";
+import indHealthcare from "@/assets/vnc/ind-healthcare.jpg";
+import indRetail from "@/assets/vnc/ind-retail.jpg";
+import indManufacturing from "@/assets/vnc/ind-manufacturing.jpg";
+import indConstruction from "@/assets/vnc/ind-construction.jpg";
+import indHotel from "@/assets/vnc/ind-hotel.jpg";
+import indTransport from "@/assets/vnc/ind-transport.jpg";
+import indFinance from "@/assets/vnc/ind-finance.jpg";
+import indNgo from "@/assets/vnc/ind-ngo.jpg";
+import indRealestate from "@/assets/vnc/ind-realestate.jpg";
+import indLegal from "@/assets/vnc/ind-legal.jpg";
+import indGovernment from "@/assets/vnc/ind-government.jpg";
 type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 
 const cyan = "var(--color-primary)";
@@ -246,14 +244,7 @@ type Product = {
 };
 
 /* ============ LIVE MARKETPLACE DATA HOOK ============ */
-function useMarket() {
-  const fn = useServerFn(getMarketplace);
-  return useQuery({
-    queryKey: ["marketplace"],
-    queryFn: () => fn(),
-    staleTime: 60_000,
-  });
-}
+function useMarket() { return { data: undefined as undefined | { featured?: MarketProduct[]; trending?: MarketProduct[]; bestSellers?: MarketProduct[]; newReleases?: MarketProduct[]; aiProducts?: MarketProduct[] } }; }
 function toProduct(p: MarketProduct): Product {
   return {
     name: p.name,

@@ -4,11 +4,11 @@ import {
   Handshake, ShoppingBag, Network, PenTool, GraduationCap, Calendar, LifeBuoy, Download,
   ShoppingCart,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
-import valaLogo from "@/assets/vala-logo.png";
+import valaLogo from "@/assets/vnc/vala-logo.png";
 
 
 type NavItem = { label: string; icon: React.ComponentType<{ className?: string }>; badge?: string; tone?: string };
