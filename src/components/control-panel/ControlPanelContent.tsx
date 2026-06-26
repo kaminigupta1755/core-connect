@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Activity, MessageCircle, ListTodo, Clock, Zap, Bell } from 'lucide-react';
+import { Activity, MessageCircle, ListTodo, Clock, Zap, Bell, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { LiveStatusIndicators } from './LiveStatusIndicators';
@@ -63,6 +63,10 @@ const CollapsedView = memo(() => {
     navigate('/boss/alerts');
   }, [navigate]);
 
+  const handleOpenAMS = useCallback(() => {
+    navigate('/ams');
+  }, [navigate]);
+
   return (
     <div className="flex flex-col items-center gap-3 py-3">
       <button 
@@ -94,6 +98,13 @@ const CollapsedView = memo(() => {
         <Bell className="w-4 h-4 text-red-400" />
         <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 text-[8px] text-white flex items-center justify-center">3</span>
       </button>
+      <button 
+        className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center cursor-pointer transition-transform active:scale-95"
+        title="AMS Management"
+        onClick={handleOpenAMS}
+      >
+        <Trophy className="w-4 h-4 text-yellow-400" />
+      </button>
     </div>
   );
 });
@@ -101,12 +112,29 @@ const CollapsedView = memo(() => {
 CollapsedView.displayName = 'CollapsedView';
 
 export const ControlPanelContent: React.FC<ControlPanelContentProps> = memo(({ collapsed = false }) => {
+  const navigate = useNavigate();
+
   if (collapsed) {
     return <CollapsedView />;
   }
 
   return (
     <div className="p-2 space-y-3 max-h-[280px] overflow-y-auto">
+      {/* AMS Management — Award Management System control center */}
+      <button
+        onClick={() => navigate('/ams')}
+        className="w-full group flex items-center gap-2 px-2.5 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/30 hover:from-yellow-500/30 hover:to-amber-500/20 transition-all active:scale-[0.98]"
+      >
+        <div className="w-7 h-7 rounded-md bg-yellow-500/30 flex items-center justify-center">
+          <Trophy className="w-4 h-4 text-yellow-300" />
+        </div>
+        <div className="flex-1 text-left">
+          <div className="text-[11px] font-semibold text-yellow-100">AMS Management</div>
+          <div className="text-[9px] text-yellow-200/60">Awards · Badges · XP · Leaderboards</div>
+        </div>
+        <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-500/30 text-yellow-100 font-medium">Open</span>
+      </button>
+
       {/* Section 1: Live Status */}
       <Section icon={Activity} title="Live Status" collapsed={collapsed}>
         <LiveStatusIndicators />
