@@ -106,13 +106,15 @@ const CollapsedView = memo(() => {
         <Bell className="w-4 h-4 text-red-400" />
         <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 text-[8px] text-white flex items-center justify-center">3</span>
       </button>
-      <button 
-        className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center cursor-pointer transition-transform active:scale-95"
-        title="AMS Management"
-        onClick={handleOpenAMS}
-      >
-        <Trophy className="w-4 h-4 text-yellow-400" />
-      </button>
+      {canAccessAMS && (
+        <button 
+          className="w-8 h-8 rounded-lg bg-yellow-500/20 flex items-center justify-center cursor-pointer transition-transform active:scale-95"
+          title="AMS Management"
+          onClick={handleOpenAMS}
+        >
+          <Trophy className="w-4 h-4 text-yellow-400" />
+        </button>
+      )}
     </div>
   );
 });
