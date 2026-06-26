@@ -123,6 +123,7 @@ CollapsedView.displayName = 'CollapsedView';
 
 export const ControlPanelContent: React.FC<ControlPanelContentProps> = memo(({ collapsed = false }) => {
   const navigate = useNavigate();
+  const canAccessAMS = useCanAccessAMS();
 
   if (collapsed) {
     return <CollapsedView />;
@@ -131,16 +132,17 @@ export const ControlPanelContent: React.FC<ControlPanelContentProps> = memo(({ c
   return (
     <div className="p-2 space-y-3 max-h-[280px] overflow-y-auto">
       {/* AMS Management — Award Management System control center */}
-      <button
-        onClick={() => navigate('/ams')}
-        className="w-full group flex items-center gap-2 px-2.5 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/30 hover:from-yellow-500/30 hover:to-amber-500/20 transition-all active:scale-[0.98]"
-      >
-        <div className="w-7 h-7 rounded-md bg-yellow-500/30 flex items-center justify-center">
-          <Trophy className="w-4 h-4 text-yellow-300" />
-        </div>
-        <div className="flex-1 text-left">
-          <div className="text-[11px] font-semibold text-yellow-100">AMS Management</div>
-          <div className="text-[9px] text-yellow-200/60">Awards · Badges · XP · Leaderboards</div>
+      {canAccessAMS && (
+        <button
+          onClick={() => navigate('/ams')}
+          className="w-full group flex items-center gap-2 px-2.5 py-2 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/10 border border-yellow-500/30 hover:from-yellow-500/30 hover:to-amber-500/20 transition-all active:scale-[0.98]"
+        >
+          <div className="w-7 h-7 rounded-md bg-yellow-500/30 flex items-center justify-center">
+            <Trophy className="w-4 h-4 text-yellow-300" />
+          </div>
+          <div className="flex-1 text-left">
+            <div className="text-[11px] font-semibold text-yellow-100">AMS Management</div>
+            <div className="text-[9px] text-yellow-200/60">Awards · Badges · XP · Leaderboards</div>
         </div>
         <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-500/30 text-yellow-100 font-medium">Open</span>
       </button>
