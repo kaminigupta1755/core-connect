@@ -119,7 +119,7 @@ function App() {
               <Routes>
                 {/* Public */}
                 <Route path="/" element={<Index />} />
-                <Route path="/home" element={<Homepage />} />
+                <Route path="/home" element={<Index />} />
                 <Route path="/landing" element={<SimpleLanding />} />
                 <Route path="/franchise-landing" element={<FranchiseLanding />} />
                 <Route path="/reseller-landing" element={<ResellerLanding />} />
