@@ -30,13 +30,44 @@ Deno.serve(async (req) => {
     }
     const sqlText = await data.text();
 
-    const sql = postgres(DB_URL, { prepare: false, max: 1, ssl: "require", connect_timeout: 30, idle_timeout: 5 });
+    // Split on the file-marker we wrote during concat. Each chunk is one
+    // original migration file and must run in its own autocommit batch so
+    // that ALTER TYPE ... ADD VALUE statements commit before being used.
+    const blocks = sqlText
+      .split(/^-- ===== .*? ===== *$/m)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    const sql = postgres(DB_URL, { prepare: false, max: 1, ssl: "require", connect_timeout: 30, idle_timeout: 60, max_lifetime: 60 * 30 });
     const startedAt = Date.now();
+    const results: { idx: number; ok: boolean; error?: string }[] = [];
     try {
-      await sql.unsafe(sqlText);
+      for (let i = 0; i < blocks.length; i++) {
+        try {
+          await sql.unsafe(blocks[i]);
+          results.push({ idx: i, ok: true });
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          results.push({ idx: i, ok: false, error: msg });
+          // Continue applying remaining blocks; report at end.
+        }
+      }
     } finally {
       await sql.end({ timeout: 5 });
     }
+    const failed = results.filter((r) => !r.ok);
+    return new Response(
+      JSON.stringify({
+        ok: failed.length === 0,
+        blocks: blocks.length,
+        applied: results.length - failed.length,
+        failed: failed.length,
+        ms: Date.now() - startedAt,
+        bytes: sqlText.length,
+        failures: failed.slice(0, 20),
+      }),
+      { status: failed.length === 0 ? 200 : 207, headers: { ...corsHeaders, "content-type": "application/json" } },
+    );
 
     return new Response(
       JSON.stringify({ ok: true, bytes: sqlText.length, ms: Date.now() - startedAt }),
