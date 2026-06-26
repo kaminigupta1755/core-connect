@@ -53,6 +53,7 @@ Section.displayName = 'Section';
 
 const CollapsedView = memo(() => {
   const navigate = useNavigate();
+  const canAccessAMS = useCanAccessAMS();
 
   const handleSystemStatus = useCallback(() => {
     toast.info('All systems operational');
