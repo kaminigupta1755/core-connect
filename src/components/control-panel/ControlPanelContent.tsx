@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { Activity, MessageCircle, ListTodo, Clock, Zap, Bell } from 'lucide-react';
+import { Activity, MessageCircle, ListTodo, Clock, Zap, Bell, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { LiveStatusIndicators } from './LiveStatusIndicators';
