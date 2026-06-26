@@ -1,451 +1,526 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import {
-  Mail, Lock, Eye, EyeOff, ShieldCheck, Sparkles, Mic, MicOff,
-  ArrowRight, Zap, Activity, Globe, Cpu, Users, Building2,
-  Code2, Megaphone, Headphones, Handshake, Loader2, CheckCircle2,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'sonner';
-import { useVoiceAssistant } from '@/hooks/useVoiceAssistant';
-import { Volume2, VolumeX } from 'lucide-react';
+  Zap, Mail, Lock, User as UserIcon, Phone, Eye, EyeOff, ShieldCheck,
+  QrCode, KeyRound, Activity, Mic, Globe2, Users, Building2,
+  Briefcase, Code2, HeartHandshake, TrendingUp, CircleDot, ArrowRight,
+  ChevronLeft, ChevronRight, Headphones, Languages,
+} from "lucide-react";
+import aiIdle from "@/assets/vnc/ai-idle.png";
+import aiPassword from "@/assets/vnc/ai-password.png";
+import aiError from "@/assets/vnc/ai-error.png";
+import aiProcessing from "@/assets/vnc/ai-processing.png";
+import aiSuccess from "@/assets/vnc/ai-success.png";
+import aiHelp from "@/assets/vnc/ai-help.png";
 
-const emailSchema = z.string().email('Enter a valid email');
-const passwordSchema = z.string().min(6, 'Min 6 characters');
 
-type AIState = 'idle' | 'email' | 'password' | 'reveal' | 'processing' | 'success' | 'error';
+type AIState = "idle" | "email" | "password" | "peek" | "processing" | "success" | "error" | "recovery";
 
-const programs = [
-  { icon: Handshake, label: 'Reseller', metric: '12,480', tone: 'from-cyan-500/20 to-blue-500/10' },
-  { icon: Building2, label: 'Franchise', metric: '3,210', tone: 'from-indigo-500/20 to-violet-500/10' },
-  { icon: Users, label: 'Partner', metric: '8,945', tone: 'from-sky-500/20 to-cyan-500/10' },
-  { icon: Code2, label: 'Developer', metric: '21,067', tone: 'from-emerald-500/20 to-teal-500/10' },
-  { icon: Megaphone, label: 'Sales', metric: '5,612', tone: 'from-blue-500/20 to-indigo-500/10' },
-  { icon: Headphones, label: 'Support', metric: '1,438', tone: 'from-violet-500/20 to-purple-500/10' },
-];
-
-// ─── AI Avatar ──────────────────────────────────────────────────────────────
-const AIAvatar = ({ state, cursor }: { state: AIState; cursor: { x: number; y: number } }) => {
-  // eye target follows cursor (subtle)
-  const dx = Math.max(-3, Math.min(3, (cursor.x - 0.5) * 8));
-  const dy = Math.max(-2, Math.min(2, (cursor.y - 0.5) * 5));
-  const eyesClosed = state === 'password' || state === 'processing';
-
-  return (
-    <div className="relative w-44 h-44 mx-auto">
-      {/* halo rings */}
-      <motion.div
-        className="absolute inset-0 rounded-full border border-cyan-400/30"
-        animate={{ scale: [1, 1.08, 1], opacity: [0.6, 0.2, 0.6] }}
-        transition={{ duration: 3, repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute inset-2 rounded-full border border-blue-400/20"
-        animate={{ scale: [1.05, 1, 1.05], opacity: [0.3, 0.7, 0.3] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      />
-      {/* core orb */}
-      <motion.div
-        className="absolute inset-6 rounded-full bg-gradient-to-br from-cyan-400/40 via-blue-500/30 to-indigo-600/40 backdrop-blur-xl border border-white/10"
-        animate={{
-          boxShadow: state === 'processing'
-            ? ['0 0 20px rgba(34,211,238,0.4)', '0 0 60px rgba(34,211,238,0.8)', '0 0 20px rgba(34,211,238,0.4)']
-            : state === 'success'
-            ? '0 0 50px rgba(16,185,129,0.6)'
-            : state === 'error'
-            ? '0 0 40px rgba(239,68,68,0.5)'
-            : '0 0 30px rgba(59,130,246,0.4)',
-        }}
-        transition={{ duration: 1.2, repeat: state === 'processing' ? Infinity : 0 }}
-      >
-        {/* face */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          {state === 'processing' ? (
-            <Loader2 className="w-10 h-10 text-cyan-200 animate-spin" />
-          ) : state === 'success' ? (
-            <CheckCircle2 className="w-12 h-12 text-emerald-300" />
-          ) : (
-            <div className="flex gap-3" style={{ transform: `translate(${dx}px, ${dy}px)` }}>
-              {[0, 1].map((i) => (
-                <motion.span
-                  key={i}
-                  className="block w-2.5 rounded-full bg-cyan-100"
-                  animate={{ height: eyesClosed ? 2 : 10 }}
-                  transition={{ duration: 0.18 }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      </motion.div>
-      {/* scan line on processing */}
-      {state === 'processing' && (
-        <motion.div
-          className="absolute inset-6 rounded-full overflow-hidden pointer-events-none"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        >
-          <motion.div
-            className="absolute left-0 right-0 h-px bg-cyan-300/80 shadow-[0_0_8px_rgba(34,211,238,0.9)]"
-            animate={{ top: ['0%', '100%', '0%'] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'linear' }}
-          />
-        </motion.div>
-      )}
-    </div>
-  );
+const stateMeta: Record<AIState, { img: string; title: string; msg: string; tone: string }> = {
+  idle:       { img: aiIdle,       title: "Hello! I'm Nexus AI",     msg: "Welcome back. I'll guide you through a secure sign-in.",     tone: "text-primary" },
+  email:      { img: aiIdle,       title: "Listening…",                msg: "Enter your enterprise email. I'll resolve your identity.",   tone: "text-primary" },
+  password:   { img: aiPassword,   title: "Privacy mode on",           msg: "Your credentials are private. My eyes are closed.",          tone: "text-primary" },
+  peek:       { img: aiHelp,       title: "Visibility on",             msg: "Verify your entry — toggle privacy back when ready.",        tone: "text-primary" },
+  processing: { img: aiProcessing, title: "Verifying credentials…",    msg: "Negotiating secure handshake and routing your role.",        tone: "text-primary" },
+  success:    { img: aiSuccess,    title: "Welcome back, Boss!",       msg: "Identity confirmed. Preparing your dashboard.",              tone: "text-emerald-400" },
+  error:      { img: aiError,      title: "Oh no! Login failed.",      msg: "Please verify your credentials and try again.",              tone: "text-destructive" },
+  recovery:   { img: aiHelp,       title: "I'm here to help",          msg: "Enter your email and I'll send a secure reset link.",        tone: "text-primary" },
 };
 
-// ─── Page ───────────────────────────────────────────────────────────────────
-const Auth = () => {
-  const { signIn, user } = useAuth();
+const opportunities = [
+  { icon: Code2,         title: "Developer",        lines: ["Build enterprise products", "Work on global projects", "AI-powered development"] },
+  { icon: Users,         title: "Reseller",         lines: ["High commissions", "Global territory", "Recurring revenue"] },
+  { icon: Building2,     title: "Franchise Owner",  lines: ["Regional rights", "Local market control", "Proven playbooks"] },
+  { icon: HeartHandshake,title: "Partner",          lines: ["Co-sell with us", "Shared pipeline", "Strategic accounts"] },
+  { icon: TrendingUp,    title: "Sales Executive",  lines: ["Uncapped commissions", "Enterprise deals", "Career growth"] },
+  { icon: Briefcase,     title: "Support Executive",lines: ["Help millions of users", "24/7 global desk", "Customer success"] },
+];
+
+function AuthPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [tab, setTab] = useState<"email" | "username" | "mobile" | "otp" | "qr">("email");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
   const [remember, setRemember] = useState(true);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [aiState, setAiState] = useState<AIState>('idle');
-  const [cursor, setCursor] = useState({ x: 0.5, y: 0.5 });
-  const [aiMsg, setAiMsg] = useState('Welcome. I will guide you in.');
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Voice intent router — fills fields and triggers actions hands-free
-  const handleVoice = (text: string, isFinal: boolean) => {
-    if (!isFinal) return;
-    const t = text.toLowerCase().trim();
-    const emailMatch = t.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
-    if (emailMatch) setEmail(emailMatch[0]);
-    if (/(log ?in|sign in|enter|submit|authenticate)/.test(t)) {
-      formRef.current?.requestSubmit();
-    } else if (/(forgot|reset).*(password)/.test(t)) {
-      navigate('/forgot-password');
-    } else if (/show password/.test(t)) {
-      setShowPassword(true);
-    } else if (/hide password/.test(t)) {
-      setShowPassword(false);
-    }
-  };
-
-  const voice = useVoiceAssistant({ onTranscript: handleVoice });
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => { if (user) navigate('/dashboard', { replace: true }); }, [user, navigate]);
+  const [busy, setBusy] = useState(false);
+  const [aiState, setAiState] = useState<AIState>("idle");
+  const [voiceOn, setVoiceOn] = useState(false);
+  const [oppIndex, setOppIndex] = useState(0);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const r = containerRef.current?.getBoundingClientRect();
-      if (!r) return;
-      setCursor({ x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height });
-    };
-    window.addEventListener('mousemove', onMove);
-    return () => window.removeEventListener('mousemove', onMove);
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate("/me");
+    });
+  }, [navigate]);
+
+  useEffect(() => {
+    if (showPwd && aiState === "password") setAiState("peek");
+    else if (!showPwd && aiState === "peek") setAiState("password");
+  }, [showPwd, aiState]);
+
+  useEffect(() => {
+    const t = setInterval(() => setOppIndex((i) => (i + 1) % opportunities.length), 4500);
+    return () => clearInterval(t);
   }, []);
 
-  useEffect(() => {
-    const msgs: Record<AIState, string> = {
-      idle: 'Welcome. I will guide you in.',
-      email: 'Identifying your workspace…',
-      password: 'Privacy mode active. I am not looking.',
-      reveal: 'Confirming your key.',
-      processing: 'Verifying with secure gateway…',
-      success: 'Authenticated. Preparing your console.',
-      error: 'I can help. Try again or recover access.',
-    };
-    setAiMsg(msgs[aiState]);
-    if (voice.enabled) voice.speak(msgs[aiState]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [aiState]);
-
-  const validate = () => {
-    const e: typeof errors = {};
-    const er = emailSchema.safeParse(email); if (!er.success) e.email = er.error.errors[0].message;
-    const pr = passwordSchema.safeParse(password); if (!pr.success) e.password = pr.error.errors[0].message;
-    setErrors(e); return Object.keys(e).length === 0;
-  };
-
-  const onSubmit = async (ev: React.FormEvent) => {
-    ev.preventDefault();
-    if (!validate()) { setAiState('error'); return; }
-    setAiState('processing');
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setAiState("processing");
     try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        setAiState('error');
-        toast.error(error.message.includes('Invalid') ? 'Invalid email or password' : error.message);
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({
+          email, password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/me`,
+            data: { display_name: name || email.split("@")[0], phone },
+          },
+        });
+        if (error) throw error;
+        setAiState("success");
+        toast.success("Identity provisioned. Welcome to Nexus.");
+        setTimeout(() => navigate("/me"), 800);
       } else {
-        setAiState('success');
-        setTimeout(() => navigate('/dashboard', { replace: true }), 900);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        setAiState("success");
+        setTimeout(() => navigate("/me"), 600);
       }
-    } catch {
-      setAiState('error');
-      toast.error('Unexpected error');
+    } catch (err) {
+      setAiState("error");
+      toast.error(err instanceof Error ? err.message : "Authentication failed");
+      setTimeout(() => setAiState("idle"), 2200);
+    } finally {
+      setBusy(false);
     }
-  };
+  }
 
-  const oauth = (p: string) => toast.info(`${p} sign-in coming online`);
+  async function google() {
+    setBusy(true);
+    setAiState("processing");
+    const r = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/me` } });
+    if (r.error) {
+      setAiState("error");
+      toast.error(r.error.message);
+      setBusy(false);
+      setTimeout(() => setAiState("idle"), 1500);
+    }
+  }
+
+  const meta = stateMeta[aiState];
 
   return (
-    <div
-      ref={containerRef}
-      className="min-h-screen w-full overflow-hidden relative bg-[#05070d] text-slate-100"
-    >
-      {/* ambient backdrop */}
+    <div className="min-h-screen bg-background text-foreground overflow-hidden relative">
+      {/* Ambient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(34,211,238,0.10),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.12),transparent_55%)]" />
-        <div className="absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(255,255,255,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.6)_1px,transparent_1px)] bg-[size:48px_48px]" />
+        <div className="absolute inset-0 opacity-[0.06] [background-image:linear-gradient(to_right,oklch(0.7_0.18_280)_1px,transparent_1px),linear-gradient(to_bottom,oklch(0.7_0.18_280)_1px,transparent_1px)] [background-size:56px_56px]" />
+        <div className="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-[oklch(0.55_0.22_280/0.22)] blur-[140px]" />
+        <div className="absolute -bottom-40 -right-40 h-[600px] w-[600px] rounded-full bg-[oklch(0.6_0.2_300/0.18)] blur-[160px]" />
       </div>
 
-      {/* top status bar */}
-      <header className="relative z-10 flex items-center justify-between px-6 py-4 border-b border-white/5">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.5)]">
-            <Zap className="w-4 h-4 text-[#05070d]" />
+      {/* Top bar */}
+      <header className="relative z-10 h-14 px-6 flex items-center justify-between border-b border-border/40 backdrop-blur-xl bg-background/30">
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="h-9 w-9 rounded-lg bg-[image:var(--gradient-primary)] grid place-items-center glow-primary">
+            <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
           </div>
-          <div className="font-mono text-sm tracking-widest">
-            SOFTWARE <span className="text-cyan-300">VALA</span> <span className="text-slate-500">/ NEXUS</span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-[8px] uppercase tracking-[0.28em] text-muted-foreground">Software Vala</span>
+            <span className="font-display text-sm font-bold tracking-tight">NEXUS<span className="text-primary"> OS</span></span>
           </div>
-        </div>
-        <div className="hidden md:flex items-center gap-5 text-xs font-mono text-slate-400">
-          <span className="flex items-center gap-1.5"><Activity className="w-3.5 h-3.5 text-emerald-400" /> all systems nominal</span>
-          <span className="flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-cyan-400" /> 17 regions</span>
-          <span className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-indigo-400" /> ai gateway · live</span>
+        </Link>
+        <div className="flex items-center gap-4 text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span className="flex items-center gap-1.5"><CircleDot className="h-3 w-3 text-emerald-400 animate-pulse" /> All systems operational</span>
+          <span className="hidden md:flex items-center gap-1.5"><ShieldCheck className="h-3 w-3 text-primary" /> Enterprise grade</span>
+          <span className="hidden lg:flex items-center gap-1.5"><Globe2 className="h-3 w-3" /> 47 regions</span>
         </div>
       </header>
 
-      {/* 3-zone layout */}
-      <main className="relative z-10 grid grid-cols-1 lg:grid-cols-[1.05fr_1.1fr_1fr] gap-6 px-6 py-8 max-w-[1600px] mx-auto">
-        {/* LEFT — Ecosystem */}
-        <section className="hidden lg:flex flex-col gap-4">
-          <div className="text-xs font-mono uppercase tracking-[0.25em] text-slate-500">Nexus · opportunities</div>
-          <h2 className="text-2xl font-semibold leading-tight">
-            One identity. <span className="text-cyan-300">Six programs.</span> An ecosystem that thinks.
-          </h2>
-          <div className="grid grid-cols-2 gap-3 mt-2">
-            {programs.map((p, i) => (
-              <motion.div
-                key={p.label}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06 }}
-                className={`relative rounded-xl border border-white/10 bg-gradient-to-br ${p.tone} backdrop-blur-xl p-4 overflow-hidden`}
-              >
-                <div className="absolute inset-0 opacity-30 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.06),transparent)]" />
-                <div className="flex items-center justify-between">
-                  <p.icon className="w-5 h-5 text-cyan-200" />
-                  <span className="text-[10px] font-mono text-emerald-300">● live</span>
-                </div>
-                <div className="mt-3 text-xs text-slate-300">{p.label} Program</div>
-                <div className="font-mono text-lg text-white">{p.metric}</div>
-              </motion.div>
-            ))}
+      <main className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_minmax(420px,500px)_1fr] gap-5 px-5 py-5">
+        {/* LEFT — Ecosystem opportunities */}
+        <aside className="hidden lg:flex flex-col gap-4">
+          <div className="panel rounded-2xl p-5 bg-[image:linear-gradient(135deg,oklch(0.3_0.15_280/0.4),oklch(0.2_0.1_300/0.3))] border-primary/30">
+            <div className="text-[10px] uppercase tracking-[0.28em] text-primary mb-2">Global Ecosystem</div>
+            <h2 className="font-display text-2xl font-bold leading-tight">
+              Join Software Vala<br />
+              <span className="bg-[image:var(--gradient-primary)] bg-clip-text text-transparent">Nexus OS</span>
+            </h2>
+            <p className="text-xs text-muted-foreground mt-2">Opportunities for everyone, everywhere.</p>
           </div>
-          <div className="mt-auto rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-xl p-4">
-            <div className="text-xs font-mono text-slate-500 mb-2">live platform metrics</div>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              {[['Sessions','48.2k'],['Latency','38ms'],['Uptime','99.99%']].map(([k,v]) => (
-                <div key={k}>
-                  <div className="text-lg font-mono text-cyan-200">{v}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-500">{k}</div>
+
+          <div className="panel rounded-2xl p-4 relative">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Opportunity stream</span>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setOppIndex((i) => (i - 1 + opportunities.length) % opportunities.length)} className="h-6 w-6 rounded-md border border-border hover:border-primary/60 grid place-items-center">
+                  <ChevronLeft className="h-3 w-3" />
+                </button>
+                <button onClick={() => setOppIndex((i) => (i + 1) % opportunities.length)} className="h-6 w-6 rounded-md border border-border hover:border-primary/60 grid place-items-center">
+                  <ChevronRight className="h-3 w-3" />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              {opportunities.map((o, i) => {
+                const active = i === oppIndex;
+                return (
+                  <div key={o.title} className={`p-3 rounded-xl border transition-all flex items-start gap-3 ${active ? "border-primary/60 bg-primary/10 scale-[1.01]" : "border-border bg-background/40"}`}>
+                    <div className={`h-9 w-9 rounded-lg grid place-items-center shrink-0 ${active ? "bg-primary/20 text-primary" : "bg-background/60 text-muted-foreground"}`}>
+                      <o.icon className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold">{o.title}</span>
+                        {active && <span className="text-[9px] uppercase tracking-widest text-emerald-400">Hiring</span>}
+                      </div>
+                      <ul className="mt-1 space-y-0.5">
+                        {o.lines.map((l) => (
+                          <li key={l} className="text-[10px] text-muted-foreground flex items-center gap-1.5">
+                            <span className="h-1 w-1 rounded-full bg-primary/60" /> {l}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {active && (
+                      <button className="h-7 px-3 rounded-md bg-[image:var(--gradient-primary)] text-primary-foreground text-[10px] font-semibold uppercase tracking-widest shrink-0">
+                        Apply
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="panel rounded-2xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Live platform metrics</span>
+              <Activity className="h-3 w-3 text-emerald-400 animate-pulse" />
+            </div>
+            <div className="grid grid-cols-4 gap-2 mb-3">
+              {[
+                { v: "150+", l: "Modules" },
+                { v: "50+",  l: "Roles" },
+                { v: "1K+",  l: "Pages" },
+                { v: "100+", l: "Countries" },
+              ].map((s) => (
+                <div key={s.l} className="text-center p-2 rounded-lg border border-border bg-background/40">
+                  <div className="font-display text-base font-bold text-primary">{s.v}</div>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-widest">{s.l}</div>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-2">
+              {[
+                { l: "Active sessions", v: "184,392", bar: 78 },
+                { l: "Auth latency",    v: "42 ms",   bar: 22 },
+              ].map((m) => (
+                <div key={m.l}>
+                  <div className="flex justify-between text-[10px] mb-1">
+                    <span className="text-muted-foreground">{m.l}</span>
+                    <span className="text-mono">{m.v}</span>
+                  </div>
+                  <div className="h-1 rounded-full bg-border/50 overflow-hidden">
+                    <div className="h-full bg-[image:var(--gradient-primary)] rounded-full" style={{ width: `${m.bar}%` }} />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </aside>
 
-        {/* CENTER — Auth */}
-        <section className="flex flex-col items-stretch justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-            className="relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-8 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
-          >
-            <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-cyan-400/20 via-transparent to-indigo-500/20 -z-10 blur-xl opacity-60" />
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-cyan-300">secure gateway</div>
-                <h1 className="text-2xl font-semibold mt-1">Authenticate</h1>
+        {/* CENTER — Auth gateway */}
+        <section className="flex items-start justify-center">
+          <div className="w-full panel rounded-2xl p-6 relative overflow-hidden backdrop-blur-2xl">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+
+            <div className="text-center mb-5">
+              <div className="inline-flex items-center gap-2 px-3 h-6 rounded-full border border-primary/40 bg-primary/10 text-[9px] uppercase tracking-[0.24em] text-primary">
+                <ShieldCheck className="h-3 w-3" /> Secure Gateway
               </div>
-              <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-300">
-                <ShieldCheck className="w-3.5 h-3.5" /> tls · argon2 · jwt
-              </div>
+              <h1 className="font-display text-2xl font-bold mt-3">
+                {mode === "signin" ? <>Welcome Back, <span className="text-primary">Boss!</span> 👋</> : <>Provision your <span className="text-primary">identity</span></>}
+              </h1>
+              <p className="text-xs text-muted-foreground mt-1">
+                {mode === "signin" ? "Sign in to continue your journey with Nexus OS" : "One email, one identity, infinite reach"}
+              </p>
             </div>
 
-            <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
-              <div>
-                <label className="text-[11px] font-mono uppercase tracking-widest text-slate-400">Email / Mobile / Username</label>
-                <div className="relative mt-1.5">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <Input
-                    type="text" autoComplete="username" value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onFocus={() => setAiState('email')}
-                    onBlur={() => aiState === 'email' && setAiState('idle')}
-                    placeholder="you@nexus.io"
-                    className="pl-9 h-11 bg-black/40 border-white/10 focus-visible:ring-cyan-400/50 focus-visible:border-cyan-400/50 text-slate-100 placeholder:text-slate-600"
-                  />
-                </div>
-                {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
-              </div>
+            {/* Auth method tabs */}
+            <div className="grid grid-cols-5 gap-1 mb-4 border-b border-border">
+              {([
+                ["email", "Email"], ["username", "Username"], ["mobile", "Mobile"], ["otp", "OTP"], ["qr", "QR"],
+              ] as const).map(([k, label]) => (
+                <button key={k} type="button" onClick={() => setTab(k)}
+                  className={`h-9 text-[11px] font-semibold uppercase tracking-wider transition-colors border-b-2 -mb-px ${
+                    tab === k ? "text-primary border-primary" : "text-muted-foreground border-transparent hover:text-foreground"
+                  }`}>
+                  {label}
+                </button>
+              ))}
+            </div>
 
-              <div>
-                <label className="text-[11px] font-mono uppercase tracking-widest text-slate-400">Password</label>
-                <div className="relative mt-1.5">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <Input
-                    type={showPassword ? 'text' : 'password'} autoComplete="current-password" value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onFocus={() => setAiState(showPassword ? 'reveal' : 'password')}
-                    onBlur={() => (aiState === 'password' || aiState === 'reveal') && setAiState('idle')}
-                    placeholder="••••••••••"
-                    className="pl-9 pr-10 h-11 bg-black/40 border-white/10 focus-visible:ring-cyan-400/50 focus-visible:border-cyan-400/50 text-slate-100 placeholder:text-slate-600"
+            <form onSubmit={submit} className="space-y-2.5">
+              {mode === "signup" && (
+                <Field icon={UserIcon} value={name} onChange={setName} placeholder="Full name" />
+              )}
+              {tab === "mobile" || tab === "otp" ? (
+                <Field icon={Phone} value={phone} onChange={setPhone} placeholder="+91 98765 43210" type="tel" />
+              ) : tab === "username" ? (
+                <Field icon={UserIcon} value={email} onChange={setEmail} placeholder="username" onFocus={() => setAiState("email")} onBlur={() => aiState === "email" && setAiState("idle")} />
+              ) : tab === "qr" ? (
+                <div className="h-44 rounded-xl border border-border bg-background/40 grid place-items-center">
+                  <div className="text-center">
+                    <QrCode className="h-12 w-12 mx-auto text-primary mb-2" />
+                    <p className="text-xs text-muted-foreground">Scan with Nexus mobile app</p>
+                  </div>
+                </div>
+              ) : (
+                <Field icon={Mail} value={email} onChange={setEmail} placeholder="boss@softwarevala.com" type="email"
+                  onFocus={() => setAiState("email")} onBlur={() => aiState === "email" && setAiState("idle")} />
+              )}
+
+              {tab !== "otp" && tab !== "qr" && (
+                <div className="flex items-center gap-2 h-11 rounded-lg border border-border bg-background/40 px-3 focus-within:border-primary/60 transition-colors">
+                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  <input
+                    required={tab === "email" || tab === "username"} type={showPwd ? "text" : "password"} minLength={6} value={password}
+                    onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password"
+                    onFocus={() => setAiState(showPwd ? "peek" : "password")}
+                    onBlur={() => (aiState === "password" || aiState === "peek") && setAiState("idle")}
+                    className="flex-1 bg-transparent text-sm focus:outline-none"
                   />
-                  <button
-                    type="button"
-                    onClick={() => { const n = !showPassword; setShowPassword(n); if (document.activeElement?.tagName === 'INPUT') setAiState(n ? 'reveal' : 'password'); }}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-cyan-300 transition"
-                    aria-label="toggle password"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  <button type="button" onClick={() => setShowPwd((s) => !s)} className="text-muted-foreground hover:text-foreground">
+                    {showPwd ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
                   </button>
                 </div>
-                {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
-              </div>
+              )}
 
-              <div className="flex items-center justify-between text-xs">
-                <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
-                  <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="accent-cyan-400" />
-                  Remember this device
+              {tab === "otp" && (
+                <button type="button" className="w-full h-11 rounded-lg border border-primary/40 bg-primary/10 text-primary text-sm font-semibold flex items-center justify-center gap-2">
+                  <KeyRound className="h-4 w-4" /> Send OTP
+                </button>
+              )}
+
+              <div className="flex items-center justify-between text-[11px] pt-1">
+                <label className="flex items-center gap-2 cursor-pointer text-muted-foreground hover:text-foreground">
+                  <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="h-3.5 w-3.5 rounded accent-primary" />
+                  Remember me
                 </label>
-                <button type="button" onClick={() => navigate('/forgot-password')} className="text-cyan-300 hover:text-cyan-200">
-                  Forgot password?
+                <button type="button" onClick={() => setAiState("recovery")} className="text-primary font-medium hover:underline">
+                  Forgot Password?
                 </button>
               </div>
 
-              <Button
-                type="submit" disabled={aiState === 'processing'}
-                className="w-full h-11 bg-gradient-to-r from-cyan-400 to-indigo-500 hover:from-cyan-300 hover:to-indigo-400 text-[#05070d] font-semibold shadow-[0_0_30px_rgba(34,211,238,0.35)]"
-              >
-                {aiState === 'processing' ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Authenticating…</>
-                ) : aiState === 'success' ? (
-                  <><CheckCircle2 className="w-4 h-4 mr-2" />Verified</>
-                ) : (
-                  <>Enter Nexus <ArrowRight className="w-4 h-4 ml-2" /></>
+              <button disabled={busy} type="submit"
+                className="w-full h-12 mt-2 rounded-lg bg-[image:var(--gradient-primary)] text-primary-foreground font-semibold text-sm hover:opacity-90 glow-primary disabled:opacity-60 flex items-center justify-center gap-3 group">
+                {busy ? "Authenticating…" : (
+                  <>
+                    {mode === "signin" ? "Login Now" : "Create Account"}
+                    <span className="h-7 w-7 rounded-full bg-primary-foreground/20 grid place-items-center group-hover:translate-x-0.5 transition-transform">
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </>
                 )}
-              </Button>
-
+              </button>
             </form>
 
-            <div className="mt-6 flex items-center justify-between text-[10px] font-mono text-slate-500">
-              <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> session encrypted</span>
-              <span>v3.2 · nexus core</span>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* RIGHT — AI Assistant */}
-        <section className="hidden lg:flex flex-col">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="relative rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-2xl p-6 flex-1 flex flex-col"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-cyan-300">vala · ai assistant</div>
-              <div className="flex items-center gap-1.5">
-                <select
-                  value={voice.lang}
-                  onChange={(e) => voice.setLang(e.target.value)}
-                  disabled={!voice.supported}
-                  className="text-[10px] font-mono bg-black/40 border border-white/10 rounded-full px-2 py-1 text-slate-300 focus:outline-none focus:border-cyan-400/40"
-                  aria-label="voice language"
-                >
-                  {voice.langs.map((l) => (
-                    <option key={l.code} value={l.code} className="bg-black">{l.label}</option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => voice.setMuted(!voice.muted)}
-                  disabled={!voice.supported}
-                  title={voice.muted ? 'unmute voice output' : 'mute voice output'}
-                  className="p-1.5 rounded-full border border-white/10 text-slate-400 hover:text-cyan-300 hover:border-cyan-400/40 transition disabled:opacity-40"
-                >
-                  {voice.muted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
-                </button>
-                <button
-                  type="button"
-                  onClick={voice.toggleListening}
-                  disabled={!voice.supported}
-                  className={`flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-1 rounded-full border transition disabled:opacity-40 ${
-                    voice.enabled
-                      ? 'border-cyan-400/50 text-cyan-300 bg-cyan-400/10'
-                      : 'border-white/10 text-slate-400 hover:text-cyan-300'
-                  }`}
-                  title={voice.supported ? '' : 'voice not supported in this browser'}
-                >
-                  {voice.enabled ? <Mic className="w-3 h-3" /> : <MicOff className="w-3 h-3" />}
-                  {voice.enabled ? (voice.listening ? 'listening' : 'paused') : 'voice off'}
-                </button>
-              </div>
+            <div className="my-4 flex items-center gap-3 text-[10px] uppercase tracking-widest text-muted-foreground">
+              <div className="flex-1 h-px bg-border" /> Or continue with <div className="flex-1 h-px bg-border" />
             </div>
 
-            {voice.enabled && voice.transcript && (
-              <div className="mt-3 text-[11px] font-mono text-slate-400 bg-black/30 border border-white/5 rounded-md px-2.5 py-1.5">
-                <span className="text-cyan-300">›</span> {voice.transcript}
-              </div>
-            )}
-            {voice.speaking && (
-              <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono text-cyan-300">
-                <span className="flex gap-0.5">
-                  <span className="w-0.5 h-2 bg-cyan-300 rounded animate-pulse" />
-                  <span className="w-0.5 h-3 bg-cyan-300 rounded animate-pulse [animation-delay:120ms]" />
-                  <span className="w-0.5 h-2 bg-cyan-300 rounded animate-pulse [animation-delay:240ms]" />
-                </span>
-                speaking — say anything to interrupt
-              </div>
-            )}
-
-            <div className="mt-6"><AIAvatar state={aiState} cursor={cursor} /></div>
-
-            <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4 min-h-[88px]">
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={aiMsg}
-                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-                  className="text-sm text-slate-200 leading-relaxed"
-                >
-                  <Sparkles className="inline w-3.5 h-3.5 text-cyan-300 mr-1.5 -mt-0.5" />
-                  {aiMsg}
-                </motion.p>
-              </AnimatePresence>
+            <div className="grid grid-cols-3 gap-2">
+              <SocialBtn onClick={google} disabled={busy}>
+                <svg className="h-4 w-4" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.1 8 3l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16.1 18.9 13 24 13c3.1 0 5.9 1.1 8 3l5.7-5.7C34.6 7.1 29.6 5 24 5 16.3 5 9.7 9.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.5-2.1 14.3-5.5l-6.6-5.4C29.5 34.7 26.9 36 24 36c-5.3 0-9.7-3.1-11.3-7.5l-6.5 5C9.5 39.8 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.4-2.5 4.4-4.7 5.7l6.6 5.4C41.5 35.4 44 30.1 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+                Google
+              </SocialBtn>
+              <SocialBtn disabled>
+                <svg className="h-4 w-4" viewBox="0 0 24 24"><path fill="#F25022" d="M1 1h10v10H1z"/><path fill="#7FBA00" d="M13 1h10v10H13z"/><path fill="#00A4EF" d="M1 13h10v10H1z"/><path fill="#FFB900" d="M13 13h10v10H13z"/></svg>
+                Microsoft
+              </SocialBtn>
+              <SocialBtn disabled>
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 3 .1 3.3.8.8 1.2 1.9 1.2 3.2 0 4.7-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6C20.6 21.8 24 17.3 24 12c0-6.6-5.4-12-12-12z"/></svg>
+                GitHub
+              </SocialBtn>
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-2 text-[10px] font-mono">
-              {[
-                ['presence', aiState === 'idle' ? 'detected' : 'engaged'],
-                ['focus', aiState === 'email' ? 'email' : aiState === 'password' ? 'password' : '—'],
-                ['privacy', aiState === 'password' ? 'eyes closed' : 'standard'],
-                ['gateway', aiState === 'processing' ? 'verifying' : 'ready'],
-              ].map(([k, v]) => (
-                <div key={k} className="rounded-md border border-white/5 bg-white/[0.02] px-3 py-2 flex items-center justify-between">
-                  <span className="text-slate-500 uppercase tracking-wider">{k}</span>
-                  <span className="text-cyan-200">{v}</span>
+            <div className="mt-5 p-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 flex items-center gap-3">
+              <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-semibold">Your data is protected with Enterprise Grade Security</div>
+                <div className="flex items-center gap-3 text-[9px] text-muted-foreground mt-0.5">
+                  <span>✓ Encrypted</span><span>✓ Argon2id</span><span>✓ JWT</span><span>✓ 2FA Ready</span>
                 </div>
-              ))}
+              </div>
             </div>
 
-            <div className="mt-auto pt-4 text-[10px] font-mono text-slate-500 flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              ai never sees your password. privacy enforced at input level.
-            </div>
-          </motion.div>
+            <p className="mt-4 text-center text-[11px] text-muted-foreground">
+              {mode === "signin" ? "Don't have an account? " : "Already have an account? "}
+              <button onClick={() => setMode(mode === "signin" ? "signup" : "signin")} className="text-primary font-semibold hover:underline">
+                {mode === "signin" ? "Create Account" : "Sign in"}
+              </button>
+            </p>
+          </div>
         </section>
+
+        {/* RIGHT — Live AI Assistant */}
+        <aside className="hidden lg:flex flex-col gap-4">
+          <div className="panel rounded-2xl p-5 relative overflow-hidden">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-primary/20 border border-primary/40 grid place-items-center">
+                  <Zap className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground">Nexus</div>
+                  <div className="text-sm font-bold font-display">AI Assistant</div>
+                </div>
+              </div>
+              <span className="flex items-center gap-1.5 text-[10px] text-emerald-400">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Listening…
+              </span>
+            </div>
+
+            {/* AI dialog bubble */}
+            <div className="p-3 rounded-xl border border-primary/30 bg-primary/5 mb-3">
+              <div className={`text-xs font-semibold ${meta.tone}`}>{meta.title}</div>
+              <p className="text-[11px] text-foreground/80 mt-1 leading-relaxed">{meta.msg}</p>
+              <div className="mt-2 flex items-center gap-0.5 h-3">
+                {[...Array(20)].map((_, i) => (
+                  <span key={i} className="w-0.5 bg-primary rounded-full animate-pulse"
+                    style={{ height: `${30 + Math.sin(i + aiState.length) * 50 + 20}%`, animationDelay: `${i * 80}ms` }} />
+                ))}
+              </div>
+            </div>
+
+            {/* The live AI girl photo */}
+            <div className="relative h-72 rounded-xl overflow-hidden bg-[image:linear-gradient(180deg,oklch(0.25_0.1_280/0.4),oklch(0.18_0.08_300/0.3))] border border-border">
+              <div className="absolute inset-0 [background:radial-gradient(circle_at_50%_30%,oklch(0.7_0.18_280/0.25),transparent_70%)]" />
+              <img
+                src={meta.img}
+                alt="Nexus AI Assistant"
+                className="absolute inset-0 w-full h-full object-contain object-bottom transition-all duration-500 ease-out animate-fade-in"
+                key={aiState}
+                loading="lazy"
+                width={512}
+                height={640}
+              />
+              {aiState === "processing" && (
+                <div className="absolute inset-0 [background:repeating-linear-gradient(0deg,transparent,transparent_4px,oklch(0.7_0.18_280/0.08)_4px,oklch(0.7_0.18_280/0.08)_5px)] animate-pulse" />
+              )}
+              <div className="absolute top-2 right-2 flex items-center gap-1 px-2 h-6 rounded-full bg-background/70 backdrop-blur text-[9px] uppercase tracking-widest border border-border">
+                <span className={`h-1.5 w-1.5 rounded-full ${aiState === "success" ? "bg-emerald-400" : aiState === "error" ? "bg-destructive" : "bg-primary"} animate-pulse`} />
+                {aiState}
+              </div>
+            </div>
+
+            {/* Controls */}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="p-2 rounded-lg border border-border bg-background/40 flex items-center gap-2">
+                <Languages className="h-3.5 w-3.5 text-primary" />
+                <div className="flex-1 min-w-0">
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Language</div>
+                  <div className="text-[11px] font-semibold truncate">English (US)</div>
+                </div>
+              </div>
+              <button onClick={() => setVoiceOn((v) => !v)} className={`p-2 rounded-lg border flex items-center gap-2 transition-colors ${voiceOn ? "border-primary bg-primary/10" : "border-border bg-background/40"}`}>
+                <Mic className={`h-3.5 w-3.5 ${voiceOn ? "text-primary" : "text-muted-foreground"}`} />
+                <div className="flex-1 min-w-0 text-left">
+                  <div className="text-[9px] uppercase tracking-widest text-muted-foreground">Voice</div>
+                  <div className="text-[11px] font-semibold">{voiceOn ? "Female · Neural" : "Tap to enable"}</div>
+                </div>
+              </button>
+            </div>
+
+            <button className="mt-2 w-full h-9 rounded-lg border border-border bg-background/40 hover:border-primary/60 text-[11px] font-medium flex items-center justify-center gap-2 transition-colors">
+              <Headphones className="h-3.5 w-3.5" /> Contact human support
+            </button>
+          </div>
+
+          <div className="panel rounded-2xl p-4">
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">AI Awareness</div>
+            <div className="space-y-2 text-[11px]">
+              <Awareness label="Presence detected" value="Active" />
+              <Awareness label="Device fingerprint" value="Trusted" />
+              <Awareness label="Threat model" value="Nominal" />
+              <Awareness label="Geo signal" value="India · Mumbai" />
+            </div>
+          </div>
+        </aside>
       </main>
+
+      {/* Footer status bar */}
+      <footer className="relative z-10 mx-5 mb-5 panel rounded-2xl p-3 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-[11px]">
+        <Stat dot="emerald" label="System Status" value="All Systems Operational" />
+        <Stat dot="emerald" label="Server Health" value="100%" />
+        <Stat dot="emerald" label="Security" value="Secure" />
+        <Stat dot="primary" label="Last Login" value="12 May, 10:30 AM" />
+        <Stat dot="primary" label="Active Sessions" value="3 Active" />
+        <Stat dot="primary" label="Your IP" value="103.21.244.xxx" />
+      </footer>
+      <Toaster />
     </div>
   );
-};
+}
 
-export default Auth;
+function Field({
+  icon: Icon, value, onChange, placeholder, type = "text", onFocus, onBlur,
+}: {
+  icon: React.ComponentType<{ className?: string }>; value: string;
+  onChange: (v: string) => void; placeholder?: string; type?: string;
+  onFocus?: () => void; onBlur?: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-2 h-11 rounded-lg border border-border bg-background/40 px-3 focus-within:border-primary/60 transition-colors">
+      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+      <input
+        type={type} value={value}
+        onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        onFocus={onFocus} onBlur={onBlur}
+        className="flex-1 bg-transparent text-sm focus:outline-none"
+      />
+    </div>
+  );
+}
+
+function SocialBtn({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button type="button" {...props}
+      className="h-10 rounded-lg border border-border bg-background/40 hover:border-primary/60 flex items-center justify-center gap-1.5 text-[11px] font-medium disabled:opacity-50 transition-colors">
+      {children}
+    </button>
+  );
+}
+
+function Awareness({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-semibold text-emerald-400 flex items-center gap-1">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> {value}
+      </span>
+    </div>
+  );
+}
+
+function Stat({ dot, label, value }: { dot: "emerald" | "primary"; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className={`h-2 w-2 rounded-full animate-pulse ${dot === "emerald" ? "bg-emerald-400" : "bg-primary"}`} />
+      <div className="min-w-0">
+        <div className="text-[9px] uppercase tracking-widest text-muted-foreground">{label}</div>
+        <div className="font-semibold truncate">{value}</div>
+      </div>
+    </div>
+  );
+}
+
+export default AuthPage;
