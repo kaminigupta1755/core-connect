@@ -143,9 +143,11 @@ export const ControlPanelContent: React.FC<ControlPanelContentProps> = memo(({ c
           <div className="flex-1 text-left">
             <div className="text-[11px] font-semibold text-yellow-100">AMS Management</div>
             <div className="text-[9px] text-yellow-200/60">Awards · Badges · XP · Leaderboards</div>
-        </div>
-        <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-500/30 text-yellow-100 font-medium">Open</span>
-      </button>
+          </div>
+          <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-500/30 text-yellow-100 font-medium">Open</span>
+        </button>
+      )}
+
 
       {/* Section 1: Live Status */}
       <Section icon={Activity} title="Live Status" collapsed={collapsed}>
