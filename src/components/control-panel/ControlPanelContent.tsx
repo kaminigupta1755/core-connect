@@ -9,6 +9,13 @@ import React, { memo, useCallback } from 'react';
 import { Activity, MessageCircle, ListTodo, Clock, Zap, Bell, Trophy } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+
+const AMS_ALLOWED_ROLES = ['boss_owner', 'super_admin', 'admin', 'ceo', 'franchise', 'reseller', 'developer'];
+const useCanAccessAMS = () => {
+  const { userRole, isBossOwner } = useAuth();
+  return isBossOwner || (!!userRole && AMS_ALLOWED_ROLES.includes(userRole));
+};
 import { LiveStatusIndicators } from './LiveStatusIndicators';
 import { LiveChatBlock } from './LiveChatBlock';
 import { LiveRunningTasks } from './LiveRunningTasks';
