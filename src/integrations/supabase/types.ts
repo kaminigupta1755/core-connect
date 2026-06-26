@@ -4707,6 +4707,45 @@ export type Database = {
           },
         ]
       }
+      demo_categories: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          display_order: number
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          slug: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          display_order?: number
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          slug?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       demo_clicks: {
         Row: {
           browser: string | null
@@ -4957,6 +4996,53 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "demo_health_demo_id_fkey"
+            columns: ["demo_id"]
+            isOneToOne: false
+            referencedRelation: "demos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      demo_login_credentials: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          demo_id: string
+          id: string
+          is_active: boolean
+          notes: string | null
+          password: string
+          role_type: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          demo_id: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          password: string
+          role_type: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          demo_id?: string
+          id?: string
+          is_active?: boolean
+          notes?: string | null
+          password?: string
+          role_type?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demo_login_credentials_demo_id_fkey"
             columns: ["demo_id"]
             isOneToOne: false
             referencedRelation: "demos"
@@ -5646,9 +5732,11 @@ export type Database = {
           demo_type: string | null
           description: string | null
           health_check_interval: number | null
+          health_score: number
           http_status: number | null
           id: string
           is_bulk_created: boolean | null
+          is_trending: boolean
           last_health_check: string | null
           last_verified_at: string | null
           lifecycle_status: string | null
@@ -5677,9 +5765,11 @@ export type Database = {
           demo_type?: string | null
           description?: string | null
           health_check_interval?: number | null
+          health_score?: number
           http_status?: number | null
           id?: string
           is_bulk_created?: boolean | null
+          is_trending?: boolean
           last_health_check?: string | null
           last_verified_at?: string | null
           lifecycle_status?: string | null
@@ -5708,9 +5798,11 @@ export type Database = {
           demo_type?: string | null
           description?: string | null
           health_check_interval?: number | null
+          health_score?: number
           http_status?: number | null
           id?: string
           is_bulk_created?: boolean | null
+          is_trending?: boolean
           last_health_check?: string | null
           last_verified_at?: string | null
           lifecycle_status?: string | null
