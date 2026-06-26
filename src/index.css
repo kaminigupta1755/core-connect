@@ -888,3 +888,66 @@ select {
 [data-radix-alert-dialog-content] {
   pointer-events: auto !important;
 }
+
+/* ============================================================
+   VALA NEXUS — design tokens & utilities (added for new home + auth UI)
+   ============================================================ */
+:root {
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-magenta: oklch(0.70 0.24 305);
+  --color-gold: oklch(0.86 0.17 95);
+  --color-grid: hsl(var(--border) / 0.35);
+  --color-panel: hsl(var(--card));
+  --color-panel-elevated: hsl(var(--card));
+
+  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  --gradient-gold: linear-gradient(135deg, oklch(0.86 0.17 95), oklch(0.78 0.18 60));
+  --gradient-panel: linear-gradient(180deg, hsl(var(--card)), hsl(var(--background)));
+  --gradient-hero:
+    radial-gradient(60% 80% at 0% 0%, hsl(var(--primary) / 0.30), transparent 60%),
+    radial-gradient(50% 70% at 100% 100%, hsl(var(--accent) / 0.30), transparent 60%);
+  --gradient-glow: radial-gradient(120% 80% at 50% 0%, hsl(var(--primary) / 0.18), transparent 60%);
+
+  --shadow-glow-primary: 0 0 32px hsl(var(--primary) / 0.45);
+  --shadow-panel: 0 1px 0 hsl(0 0% 100% / 0.04) inset, 0 12px 36px hsl(0 0% 0% / 0.5);
+}
+
+@layer components {
+  .panel {
+    background: var(--gradient-panel);
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-panel);
+  }
+  .glow-primary { box-shadow: var(--shadow-glow-primary); }
+  .text-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+}
+
+@keyframes vnc-rise   { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes vnc-blink  { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes vnc-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes vnc-pulse-ring { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(2.4); opacity: 0; } }
+@keyframes vnc-sweep  { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+@keyframes vnc-fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+.animate-rise       { animation: vnc-rise 0.5s ease-out both; }
+.animate-blink      { animation: vnc-blink 1.2s ease-in-out infinite; }
+.animate-ticker     { animation: vnc-ticker 60s linear infinite; }
+.animate-pulse-ring { animation: vnc-pulse-ring 2.4s ease-out infinite; }
+.animate-fade-in    { animation: vnc-fade-in 0.5s ease-out both; }
+.animate-sweep      { position: relative; overflow: hidden; }
+.animate-sweep::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.15), transparent);
+  animation: vnc-sweep 3.5s ease-in-out infinite;
+}
