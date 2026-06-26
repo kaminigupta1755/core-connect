@@ -214,7 +214,7 @@ function App() {
                 <Route path="/api-integration" element={<RequireAuth><APIIntegrationDashboard /></RequireAuth>} />
 
                 {/* Achievement Management System */}
-                <Route path="/ams" element={<RequireAuth><AMSLayout /></RequireAuth>}>
+                <Route path="/ams" element={<RequireRole allowed={["boss_owner", "super_admin", "admin", "ceo", "franchise", "reseller", "developer"]}><AMSLayout /></RequireRole>}>
                   <Route index element={<AMSOverview />} />
                   <Route path="achievements" element={<Achievements />} />
                   <Route path="badges" element={<Badges />} />
