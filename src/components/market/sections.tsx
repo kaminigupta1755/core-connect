@@ -244,7 +244,7 @@ type Product = {
 };
 
 /* ============ LIVE MARKETPLACE DATA HOOK ============ */
-function useMarket() { return { data: undefined as undefined | { featured?: MarketProduct[]; trending?: MarketProduct[]; bestSellers?: MarketProduct[]; newReleases?: MarketProduct[]; aiProducts?: MarketProduct[] } }; }
+function useMarket() { return { data: undefined as undefined | { featured?: MarketProduct[]; trending?: MarketProduct[]; bestSellers?: MarketProduct[]; newReleases?: MarketProduct[]; aiProducts?: MarketProduct[]; industries?: any[]; vendors?: any[] } }; }
 function toProduct(p: MarketProduct): Product {
   return {
     name: p.name,
