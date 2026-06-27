@@ -109,41 +109,41 @@
 
   /* Dark Mode - Premium Dark */
   .dark {
-    --background: 224 71% 8%;
-    --foreground: 220 20% 98%;
+    --background: 224 78% 5%;
+    --foreground: 220 24% 98%;
 
-    --card: 224 71% 11%;
-    --card-foreground: 220 20% 98%;
+    --card: 224 60% 8%;
+    --card-foreground: 220 24% 98%;
 
-    --popover: 224 71% 11%;
-    --popover-foreground: 220 20% 98%;
+    --popover: 224 60% 8%;
+    --popover-foreground: 220 24% 98%;
 
-    --primary: 243 75% 65%;
+    --primary: 221 96% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 50% 15%;
-    --secondary-foreground: 220 20% 98%;
+    --secondary: 224 48% 12%;
+    --secondary-foreground: 220 24% 98%;
 
-    --muted: 224 50% 15%;
-    --muted-foreground: 220 14% 60%;
+    --muted: 224 48% 12%;
+    --muted-foreground: 218 18% 72%;
 
-    --accent: 258 90% 70%;
+    --accent: 304 90% 62%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 63% 50%;
     --destructive-foreground: 220 20% 98%;
 
-    --border: 224 50% 18%;
-    --input: 224 50% 18%;
-    --ring: 243 75% 65%;
+    --border: 222 55% 18%;
+    --input: 222 55% 18%;
+    --ring: 221 96% 58%;
 
-    --sidebar-background: 243 75% 55%;
+    --sidebar-background: 221 96% 48%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 243 75% 55%;
-    --sidebar-accent: 243 75% 45%;
+    --sidebar-primary-foreground: 221 96% 48%;
+    --sidebar-accent: 221 90% 40%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 243 60% 60%;
+    --sidebar-border: 221 85% 58%;
     --sidebar-ring: 0 0% 100%;
   }
 }
@@ -894,42 +894,71 @@ select {
    ============================================================ */
 :root {
   /* Vala Nexus extended palette (HSL channels for Tailwind opacity) */
-  --magenta: 305 85% 60%;
+  --magenta: 305 88% 62%;
   --magenta-foreground: 0 0% 100%;
-  --gold: 45 95% 58%;
+  --gold: 45 98% 58%;
   --gold-foreground: 35 40% 10%;
   --success: 152 70% 45%;
   --success-foreground: 0 0% 100%;
-  --panel: 224 32% 8%;
-  --panel-elevated: 224 32% 12%;
+  --panel: 224 58% 6%;
+  --panel-elevated: 224 48% 10%;
+  --surface-1: 224 58% 6%;
+  --surface-2: 224 48% 10%;
+  --aurora-violet: 271 92% 62%;
+  --aurora-purple: 304 90% 62%;
+  --aurora-cyan: 193 98% 58%;
+  --aurora-green: 152 75% 50%;
+  --status-pending: 45 98% 58%;
 
-  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-  --gradient-gold: linear-gradient(135deg, hsl(45 95% 58%), hsl(32 92% 50%));
-  --gradient-panel: linear-gradient(180deg, hsl(var(--panel-elevated)), hsl(var(--panel)));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-magenta: hsl(var(--magenta));
+  --color-gold: hsl(var(--gold));
+  --color-grid: hsl(var(--primary) / 0.38);
+
+  --gradient-primary: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--aurora-cyan)) 44%, hsl(var(--magenta)) 100%);
+  --gradient-gold: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(35 98% 52%) 54%, hsl(48 100% 72%) 100%);
+  --gradient-panel: linear-gradient(180deg, hsl(var(--panel-elevated) / 0.98) 0%, hsl(var(--panel) / 0.99) 100%);
+  --gradient-aurora: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--aurora-cyan)) 34%, hsl(var(--aurora-violet)) 68%, hsl(var(--magenta)) 100%);
+  --gradient-sunset: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--magenta)) 100%);
+  --gradient-ocean: linear-gradient(135deg, hsl(var(--aurora-cyan)) 0%, hsl(var(--primary)) 100%);
+  --gradient-cosmic: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--aurora-violet)) 50%, hsl(var(--magenta)) 100%);
   --gradient-hero:
-    radial-gradient(60% 80% at 0% 0%, hsl(var(--primary) / 0.30), transparent 60%),
-    radial-gradient(50% 70% at 100% 100%, hsl(var(--magenta) / 0.25), transparent 60%);
-  --gradient-glow: radial-gradient(120% 80% at 50% 0%, hsl(var(--primary) / 0.18), transparent 60%);
+    radial-gradient(70% 92% at 0% 0%, hsl(var(--primary) / 0.42), transparent 58%),
+    radial-gradient(56% 76% at 100% 100%, hsl(var(--magenta) / 0.34), transparent 62%),
+    linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--panel)) 62%, hsl(var(--background)) 100%);
+  --gradient-glow: radial-gradient(120% 80% at 50% 0%, hsl(var(--primary) / 0.26), transparent 60%);
 
-  --shadow-glow-primary: 0 0 32px hsl(var(--primary) / 0.45);
-  --shadow-glow-gold: 0 0 32px hsl(var(--gold) / 0.45);
-  --shadow-panel: 0 1px 0 hsl(0 0% 100% / 0.04) inset, 0 12px 36px hsl(0 0% 0% / 0.5);
+  --shadow-glow-primary: 0 0 22px hsl(var(--primary) / 0.55), 0 0 54px hsl(var(--aurora-cyan) / 0.22);
+  --shadow-glow-gold: 0 0 26px hsl(var(--gold) / 0.55), 0 0 58px hsl(var(--gold) / 0.18);
+  --shadow-panel: 0 1px 0 hsl(0 0% 100% / 0.08) inset, 0 0 0 1px hsl(var(--primary) / 0.04), 0 18px 52px hsl(0 0% 0% / 0.62);
+  --shadow-card-hover: 0 26px 70px hsl(0 0% 0% / 0.58), 0 0 36px hsl(var(--primary) / 0.22);
 }
 
 .dark {
-  --magenta: 305 90% 65%;
-  --gold: 45 100% 60%;
-  --success: 152 75% 50%;
-  --panel: 224 40% 6%;
-  --panel-elevated: 224 38% 10%;
+  --magenta: 305 92% 66%;
+  --gold: 45 100% 62%;
+  --success: 152 78% 52%;
+  --panel: 224 64% 5%;
+  --panel-elevated: 224 52% 9%;
+  --surface-1: 224 64% 5%;
+  --surface-2: 224 52% 9%;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-magenta: hsl(var(--magenta));
+  --color-gold: hsl(var(--gold));
+  --color-grid: hsl(var(--primary) / 0.42);
 }
 
 @layer components {
   .panel {
     background: var(--gradient-panel);
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border) / 0.92);
     border-radius: var(--radius);
     box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(18px) saturate(1.18);
   }
   .glow-primary { box-shadow: var(--shadow-glow-primary); }
   .text-mono {
