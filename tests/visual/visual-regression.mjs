@@ -81,7 +81,7 @@ function contrastRatio(fg, bg) {
 
 const results = [];
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || '/bin/chromium' });
 const context = await browser.newContext({
   viewport: { width: 3840, height: 2160 },
   deviceScaleFactor: 1,
