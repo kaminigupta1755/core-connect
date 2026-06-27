@@ -72,6 +72,22 @@ const config: Config = {
           900: '#0f172a',
           950: '#020617',
         },
+        magenta: {
+          DEFAULT: 'hsl(var(--magenta))',
+          foreground: 'hsl(var(--magenta-foreground))',
+        },
+        gold: {
+          DEFAULT: 'hsl(var(--gold))',
+          foreground: 'hsl(var(--gold-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        panel: {
+          DEFAULT: 'hsl(var(--panel))',
+          elevated: 'hsl(var(--panel-elevated))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

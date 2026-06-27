@@ -893,29 +893,35 @@ select {
    VALA NEXUS — design tokens & utilities (added for new home + auth UI)
    ============================================================ */
 :root {
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-border: hsl(var(--border));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-magenta: oklch(0.70 0.24 305);
-  --color-gold: oklch(0.86 0.17 95);
-  --color-grid: hsl(var(--border) / 0.35);
-  --color-panel: hsl(var(--card));
-  --color-panel-elevated: hsl(var(--card));
+  /* Vala Nexus extended palette (HSL channels for Tailwind opacity) */
+  --magenta: 305 85% 60%;
+  --magenta-foreground: 0 0% 100%;
+  --gold: 45 95% 58%;
+  --gold-foreground: 35 40% 10%;
+  --success: 152 70% 45%;
+  --success-foreground: 0 0% 100%;
+  --panel: 224 32% 8%;
+  --panel-elevated: 224 32% 12%;
 
   --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-  --gradient-gold: linear-gradient(135deg, oklch(0.86 0.17 95), oklch(0.78 0.18 60));
-  --gradient-panel: linear-gradient(180deg, hsl(var(--card)), hsl(var(--background)));
+  --gradient-gold: linear-gradient(135deg, hsl(45 95% 58%), hsl(32 92% 50%));
+  --gradient-panel: linear-gradient(180deg, hsl(var(--panel-elevated)), hsl(var(--panel)));
   --gradient-hero:
     radial-gradient(60% 80% at 0% 0%, hsl(var(--primary) / 0.30), transparent 60%),
-    radial-gradient(50% 70% at 100% 100%, hsl(var(--accent) / 0.30), transparent 60%);
+    radial-gradient(50% 70% at 100% 100%, hsl(var(--magenta) / 0.25), transparent 60%);
   --gradient-glow: radial-gradient(120% 80% at 50% 0%, hsl(var(--primary) / 0.18), transparent 60%);
 
   --shadow-glow-primary: 0 0 32px hsl(var(--primary) / 0.45);
+  --shadow-glow-gold: 0 0 32px hsl(var(--gold) / 0.45);
   --shadow-panel: 0 1px 0 hsl(0 0% 100% / 0.04) inset, 0 12px 36px hsl(0 0% 0% / 0.5);
+}
+
+.dark {
+  --magenta: 305 90% 65%;
+  --gold: 45 100% 60%;
+  --success: 152 75% 50%;
+  --panel: 224 40% 6%;
+  --panel-elevated: 224 38% 10%;
 }
 
 @layer components {
