@@ -40,9 +40,9 @@ const BRAND_TOKENS = {
 const PALETTE_TOLERANCE = 40; // per-channel distance
 
 const ROUTES = [
-  { name: 'home',  path: '/' },
+  { name: 'home',  path: '/',     requirePalette: ['primary', 'magenta', 'gold'] },
   // The project's login screen is mounted at /auth; alias /login for parity.
-  { name: 'login', path: '/auth' },
+  { name: 'login', path: '/auth', requirePalette: ['primary', 'gold'] },
 ];
 
 for (const dir of [BASELINE_DIR, ACTUAL_DIR, DIFF_DIR]) {
