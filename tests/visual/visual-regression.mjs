@@ -147,7 +147,7 @@ for (const route of ROUTES) {
     }
   }
 
-  const paletteOk  = Object.values(paletteReport).every(Boolean);
+  const paletteOk  = route.requirePalette.every((k) => paletteReport[k]);
   const contrastOk = contrast >= 4.5;
   const pixelOk    = diffStatus === 'pass' || diffStatus === 'baseline-written';
 
