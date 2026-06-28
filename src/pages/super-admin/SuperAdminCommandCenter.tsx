@@ -4,13 +4,13 @@ import { Crown, Shield, Clock, Fingerprint, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useSuperAdminGuard } from '@/hooks/useSuperAdminGuard';
 import SuperAdminLayout from '@/components/layouts/SuperAdminLayout';
-import SALiveSystemStatus from '@/components/boss';
-import SAHighRiskApprovals from '@/components/boss';
-import SAWalletQueue from '@/components/boss';
-import SARoleMonitor from '@/components/boss';
-import SAIncidentCommand from '@/components/boss';
-import SAAIFraudAlerts from '@/components/boss';
-import SAAuditLogs from '@/components/boss';
+import SALiveSystemStatus from '@/components/super-admin/SALiveSystemStatus';
+import SAHighRiskApprovals from '@/components/super-admin/SAHighRiskApprovals';
+import SAWalletQueue from '@/components/super-admin/SAWalletQueue';
+import SARoleMonitor from '@/components/super-admin/SARoleMonitor';
+import SAIncidentCommand from '@/components/super-admin/SAIncidentCommand';
+import SAAIFraudAlerts from '@/components/super-admin/SAAIFraudAlerts';
+import SAAuditLogs from '@/components/super-admin/SAAuditLogs';
 
 const SuperAdminCommandCenter = () => {
   const {
