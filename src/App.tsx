@@ -201,14 +201,15 @@ function App() {
 
                 {/* Role-specific */}
                 <Route path="/developer" element={<RequireAuth><DeveloperDashboard /></RequireAuth>} />
-                <Route path="/dev-command-center" element={<RequireAuth><DevCommandCenter /></RequireAuth>} />
+                <Route path="/dev-command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/franchise" element={<RequireAuth><FranchiseDashboard /></RequireAuth>} />
                 <Route path="/franchise-management" element={<RequireAuth><FranchiseManagement /></RequireAuth>} />
                 <Route path="/reseller" element={<RequireAuth><ResellerDashboard /></RequireAuth>} />
                 <Route path="/reseller-portal" element={<RequireAuth><ResellerPortal /></RequireAuth>} />
                 <Route path="/influencer" element={<RequireAuth><InfluencerDashboard /></RequireAuth>} />
                 <Route path="/influencer-manager" element={<RequireAuth><InfluencerManager /></RequireAuth>} />
-                <Route path="/influencer-command" element={<RequireAuth><InfluencerCommandCenter /></RequireAuth>} />
+                <Route path="/influencer-command" element={<Navigate to="/boss" replace />} />
+
 
                 {/* AI / Support / Integration */}
                 <Route path="/over-ai" element={<RequireAuth><OverAI /></RequireAuth>} />
