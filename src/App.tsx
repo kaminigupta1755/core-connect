@@ -39,10 +39,10 @@ import BulkUserCreation from "@/pages/admin/BulkUserCreation";
 import RoleManagerPage from "@/pages/admin/RoleManagerPage";
 import SecureAdminDashboard from "@/pages/admin/SecureAdminDashboard";
 
-// Boss / Owner
+// Boss / Owner — single Command Center
 import BossPanel from "@/pages/BossPanel";
 import SoftwareWalaOwnerDashboard from "@/pages/owner/SoftwareWalaOwnerDashboard";
-import SuperAdminDashboard from "@/pages/SuperAdminDashboard";
+
 
 // Manager dashboards
 import LeadManager from "@/pages/LeadManager";
@@ -63,7 +63,6 @@ import IncidentCrisisDashboard from "@/pages/IncidentCrisisDashboard";
 
 // Role-based dashboards
 import DeveloperDashboard from "@/pages/DeveloperDashboard";
-import DevCommandCenter from "@/pages/DevCommandCenter";
 import FranchiseDashboard from "@/pages/FranchiseDashboard";
 import FranchiseLanding from "@/pages/FranchiseLanding";
 import FranchiseManagement from "@/pages/FranchiseManagement";
@@ -72,10 +71,10 @@ import ResellerLanding from "@/pages/ResellerLanding";
 import ResellerPortal from "@/pages/ResellerPortal";
 import InfluencerDashboard from "@/pages/InfluencerDashboard";
 import InfluencerManager from "@/pages/InfluencerManager";
-import InfluencerCommandCenter from "@/pages/InfluencerCommandCenter";
 import PrimeUserDashboard from "@/pages/PrimeUserDashboard";
 import SimpleUserDashboard from "@/pages/SimpleUserDashboard";
 import ClientPortal from "@/pages/ClientPortal";
+
 
 // Demos & marketplace
 import DemoAccess from "@/pages/DemoAccess";
@@ -170,15 +169,18 @@ function App() {
                 <Route path="/internal-chat" element={<RequireAuth><InternalChat /></RequireAuth>} />
                 <Route path="/notifications" element={<RequireAuth><NotificationBuzzerConsole /></RequireAuth>} />
 
-                {/* Boss / Owner / Super Admin */}
+                {/* Single Command Center = Boss Panel — all admin/super-admin/command routes consolidate here */}
                 <Route path="/boss" element={<RequireRole allowed={["boss_owner", "super_admin", "admin", "ceo"]}><BossPanel /></RequireRole>} />
+                <Route path="/command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/owner" element={<RequireRole allowed={["boss_owner"]}><SoftwareWalaOwnerDashboard /></RequireRole>} />
                 <Route path="/super-admin" element={<Navigate to="/boss" replace />} />
+                <Route path="/super-admin/*" element={<Navigate to="/boss" replace />} />
 
-                {/* Admin */}
+                {/* Admin — consolidated into Command Center */}
                 <Route path="/admin" element={<Navigate to="/boss" replace />} />
                 <Route path="/admin/bulk-users" element={<RequireRole allowed={["boss_owner", "ceo"]}><BulkUserCreation /></RequireRole>} />
                 <Route path="/admin/roles" element={<RequireRole allowed={["boss_owner", "ceo"]}><RoleManagerPage /></RequireRole>} />
+
 
                 {/* Managers */}
                 <Route path="/lead-manager" element={<RequireAuth><LeadManager /></RequireAuth>} />
@@ -199,14 +201,15 @@ function App() {
 
                 {/* Role-specific */}
                 <Route path="/developer" element={<RequireAuth><DeveloperDashboard /></RequireAuth>} />
-                <Route path="/dev-command-center" element={<RequireAuth><DevCommandCenter /></RequireAuth>} />
+                <Route path="/dev-command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/franchise" element={<RequireAuth><FranchiseDashboard /></RequireAuth>} />
                 <Route path="/franchise-management" element={<RequireAuth><FranchiseManagement /></RequireAuth>} />
                 <Route path="/reseller" element={<RequireAuth><ResellerDashboard /></RequireAuth>} />
                 <Route path="/reseller-portal" element={<RequireAuth><ResellerPortal /></RequireAuth>} />
                 <Route path="/influencer" element={<RequireAuth><InfluencerDashboard /></RequireAuth>} />
                 <Route path="/influencer-manager" element={<RequireAuth><InfluencerManager /></RequireAuth>} />
-                <Route path="/influencer-command" element={<RequireAuth><InfluencerCommandCenter /></RequireAuth>} />
+                <Route path="/influencer-command" element={<Navigate to="/boss" replace />} />
+
 
                 {/* AI / Support / Integration */}
                 <Route path="/over-ai" element={<RequireAuth><OverAI /></RequireAuth>} />

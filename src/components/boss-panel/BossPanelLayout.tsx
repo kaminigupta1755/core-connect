@@ -32,13 +32,7 @@ export function BossPanelLayout({ children }: BossPanelLayoutProps) {
   const [streamingOn, setStreamingOn] = useState(true);
 
   return (
-    <div 
-      className="min-h-screen flex flex-col"
-      style={{ 
-        background: '#F8FAFC',
-        color: '#1E293B'
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-background text-foreground dark">
       {/* Fixed Global Header - LOCKED 64px */}
       <BossPanelHeader 
         streamingOn={streamingOn}
@@ -54,12 +48,12 @@ export function BossPanelLayout({ children }: BossPanelLayoutProps) {
           onCollapsedChange={setSidebarCollapsed}
         />
 
-        {/* Main Content - White background like reference */}
+        {/* Main Content - Vala Nexus dark surface matching home page */}
         <main 
-          className="flex-1 p-6 transition-all duration-300"
+          className="flex-1 p-6 transition-all duration-300 bg-background text-foreground"
           style={{ 
             marginLeft: sidebarCollapsed ? '80px' : '260px',
-            background: '#F8FAFC'
+            backgroundImage: 'var(--gradient-hero)',
           }}
         >
           {children
@@ -70,5 +64,6 @@ export function BossPanelLayout({ children }: BossPanelLayoutProps) {
         </main>
       </div>
     </div>
+
   );
 }
