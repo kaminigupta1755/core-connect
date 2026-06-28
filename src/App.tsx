@@ -63,7 +63,6 @@ import IncidentCrisisDashboard from "@/pages/IncidentCrisisDashboard";
 
 // Role-based dashboards
 import DeveloperDashboard from "@/pages/DeveloperDashboard";
-import DevCommandCenter from "@/pages/DevCommandCenter";
 import FranchiseDashboard from "@/pages/FranchiseDashboard";
 import FranchiseLanding from "@/pages/FranchiseLanding";
 import FranchiseManagement from "@/pages/FranchiseManagement";
@@ -72,10 +71,10 @@ import ResellerLanding from "@/pages/ResellerLanding";
 import ResellerPortal from "@/pages/ResellerPortal";
 import InfluencerDashboard from "@/pages/InfluencerDashboard";
 import InfluencerManager from "@/pages/InfluencerManager";
-import InfluencerCommandCenter from "@/pages/InfluencerCommandCenter";
 import PrimeUserDashboard from "@/pages/PrimeUserDashboard";
 import SimpleUserDashboard from "@/pages/SimpleUserDashboard";
 import ClientPortal from "@/pages/ClientPortal";
+
 
 // Demos & marketplace
 import DemoAccess from "@/pages/DemoAccess";
