@@ -14,7 +14,7 @@ const BLOCKED_ROUTES = [
   '/vala-control',
   '/server',
   '/developer',
-  '/super-admin'
+  '/boss'
 ];
 
 export function useFranchiseManagerGuard() {

@@ -185,7 +185,7 @@ function getRedirectPath(role: string): string {
     case 'master':
       return '/master-control';
     case 'super_admin':
-      return '/super-admin';
+      return '/boss';
     case 'admin':
       return '/admin';
     default:

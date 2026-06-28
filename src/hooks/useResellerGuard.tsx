@@ -32,7 +32,7 @@ export interface ResellerWalletData {
 // Blocked routes for reseller role - SECURITY CRITICAL
 const BLOCKED_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/finance',
   '/pricing',
   '/master-control',

@@ -38,7 +38,7 @@ const SuperAdminDashboard = () => {
   useEffect(() => {
     if (loading) return;
     if (isBossOwner) {
-      navigate("/super-admin", { replace: true });
+      navigate("/boss", { replace: true });
     }
   }, [loading, isBossOwner, navigate]);
 

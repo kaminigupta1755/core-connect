@@ -9,7 +9,7 @@ const BLOCKED_ROUTES = [
   '/pricing',
   '/admin',
   '/master',
-  '/super-admin',
+  '/boss',
   '/payout',
   '/payouts',
   '/commission-edit',

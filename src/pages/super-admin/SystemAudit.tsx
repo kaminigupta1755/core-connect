@@ -97,7 +97,7 @@ const generateAuditReport = (): AuditCategory[] => {
         { id: 'route-2', name: 'Demo List /demos', status: 'pass', message: 'Accessible', fix: '', module: 'Public' },
         { id: 'route-3', name: 'Auth /auth', status: 'pass', message: 'Accessible', fix: '', module: 'Auth' },
         { id: 'route-4', name: 'Master Admin /master-admin', status: 'pass', message: 'Protected - master only', fix: '', module: 'Admin' },
-        { id: 'route-5', name: 'Super Admin /super-admin', status: 'pass', message: 'Protected - master/super_admin', fix: '', module: 'Admin' },
+        { id: 'route-5', name: 'Super Admin /boss', status: 'pass', message: 'Protected - master/super_admin', fix: '', module: 'Admin' },
         { id: 'route-6', name: 'Franchise Routes /franchise/*', status: 'pass', message: 'Protected - franchise/super_admin', fix: '', module: 'Franchise' },
         { id: 'route-7', name: 'Reseller Routes /reseller/*', status: 'pass', message: 'Protected - reseller/super_admin', fix: '', module: 'Reseller' },
         { id: 'route-8', name: 'Developer Routes /developer/*', status: 'pass', message: 'Protected - developer/super_admin', fix: '', module: 'Developer' },

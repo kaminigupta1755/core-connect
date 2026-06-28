@@ -71,7 +71,7 @@ const BUTTON_ROUTE_MAP: Record<string, RouteDefinition> = {
   'btn_school_dashboard': { path: '/school-software/dashboard', state: { sidebar: 'hidden', context: 'global' } },
   
   // Secure Pages
-  'btn_security_center': { path: '/super-admin/security-center', state: { sidebar: 'expanded' } },
+  'btn_security_center': { path: '/boss', state: { sidebar: 'expanded' } },
   'btn_audit_logs': { path: '/super-admin-system/audit', state: { sidebar: 'expanded' } },
 };
 

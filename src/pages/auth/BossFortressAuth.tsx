@@ -117,7 +117,7 @@ const BossFortressAuth = () => {
   // Redirect if already logged in as boss_owner
   useEffect(() => {
     if (user && userRole === 'boss_owner') {
-      navigate('/super-admin');
+      navigate('/boss');
     }
   }, [user, userRole, navigate]);
 
@@ -274,7 +274,7 @@ const BossFortressAuth = () => {
       toast.success('Welcome, Boss!');
       
       setTimeout(() => {
-        navigate('/super-admin', { replace: true });
+        navigate('/boss', { replace: true });
       }, 1500);
     } catch (err) {
       console.error('OTP verify error:', err);

@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 // Blocked routes for developers - ZERO POWER principle
 const BLOCKED_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master-admin',
   '/finance',
   '/wallet',

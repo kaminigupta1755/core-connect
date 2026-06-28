@@ -21,29 +21,29 @@ interface SuperAdminLayoutProps {
 
 // SECTION 1: CORE CONTROL
 const coreControlItems = [
-  { icon: LayoutDashboard, label: 'Command Center', path: '/super-admin' },
-  { icon: Activity, label: 'Live Tracking', path: '/super-admin/live-tracking' },
+  { icon: LayoutDashboard, label: 'Command Center', path: '/boss' },
+  { icon: Activity, label: 'Live Tracking', path: '/boss' },
 ];
 
 // SECTION 2: ACCESS & ROLES
 const accessRolesItems = [
-  { icon: Users, label: 'Role Manager', path: '/super-admin/role-manager' },
-  { icon: UserCheck, label: 'User Manager', path: '/super-admin/user-manager' },
-  { icon: Shield, label: 'Permission Matrix', path: '/super-admin/permission-matrix' },
+  { icon: Users, label: 'Role Manager', path: '/boss' },
+  { icon: UserCheck, label: 'User Manager', path: '/boss' },
+  { icon: Shield, label: 'Permission Matrix', path: '/boss' },
 ];
 
 // SECTION 3: SECURITY & GOVERNANCE
 const securityItems = [
-  { icon: Lock, label: 'Security Center', path: '/super-admin/security-center' },
-  { icon: Scale, label: 'Compliance Center', path: '/super-admin/compliance-center' },
-  { icon: Eye, label: 'System Audit', path: '/super-admin/system-audit' },
+  { icon: Lock, label: 'Security Center', path: '/boss' },
+  { icon: Scale, label: 'Compliance Center', path: '/boss' },
+  { icon: Eye, label: 'System Audit', path: '/boss' },
 ];
 
 // SECTION 4: BUSINESS CONTROL
 const businessItems = [
-  { icon: Crown, label: 'Prime Manager', path: '/super-admin/prime-manager' },
-  { icon: Package, label: 'Product Manager', path: '/super-admin/product-manager' },
-  { icon: BarChart3, label: 'Performance', path: '/super-admin/performance' },
+  { icon: Crown, label: 'Prime Manager', path: '/boss' },
+  { icon: Package, label: 'Product Manager', path: '/boss' },
+  { icon: BarChart3, label: 'Performance', path: '/boss' },
 ];
 
 const SuperAdminLayout = ({ children }: SuperAdminLayoutProps) => {
@@ -99,7 +99,7 @@ const SuperAdminLayout = ({ children }: SuperAdminLayoutProps) => {
       <aside className="w-64 border-r border-border/50 bg-card/50 backdrop-blur-xl flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-border/50">
-          <Link to="/super-admin" className="flex items-center gap-3">
+          <Link to="/boss" className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center shadow-lg">
               <Crown className="w-5 h-5 text-primary-foreground" />
             </div>

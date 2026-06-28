@@ -47,7 +47,7 @@ const sidebarSections = [
     id: 'grade-1',
     title: 'Grade 1 — Platform Control',
     items: [
-      { icon: Shield, label: '2. Super Admin', path: '/wireframe/super-admin', color: 'text-orange-500' },
+      { icon: Shield, label: '2. Super Admin', path: '/wireframe/boss', color: 'text-orange-500' },
       { icon: Shield, label: '3. Admin', path: '/wireframe/admin', color: 'text-orange-400' },
       { icon: Settings, label: '4. Server Manager', path: '/wireframe/server-manager', color: 'text-gray-500' },
     ],

@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 // Blocked routes for Reseller Manager - SECURITY CRITICAL
 const BLOCKED_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/finance',
   '/wallet',
   '/pricing',

@@ -25,7 +25,7 @@ interface DemoCredential {
 
 const DEMO_CREDENTIALS: DemoCredential[] = [
   // Admin Tier
-  { role: 'boss_owner', label: 'Boss Owner', email: 'boss@softwarevala.demo', password: 'BossOwner@2024!', color: '#ef4444', icon: Crown, tier: 'admin', dashboardPath: '/super-admin' },
+  { role: 'boss_owner', label: 'Boss Owner', email: 'boss@softwarevala.demo', password: 'BossOwner@2024!', color: '#ef4444', icon: Crown, tier: 'admin', dashboardPath: '/boss' },
   { role: 'admin', label: 'Admin', email: 'admin@softwarevala.demo', password: 'Admin@2024!', color: '#f97316', icon: Shield, tier: 'admin', dashboardPath: '/admin' },
   
   // Manager Tier

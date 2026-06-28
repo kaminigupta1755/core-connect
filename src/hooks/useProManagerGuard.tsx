@@ -9,7 +9,7 @@ const BLOCKED_ROUTES = [
   '/pricing',
   '/server',
   '/master',
-  '/super-admin',
+  '/boss',
   '/developer-secure',
   '/dev-manager-secure',
   '/task-manager-secure',

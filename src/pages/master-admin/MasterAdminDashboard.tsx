@@ -349,7 +349,7 @@ const MasterAdminDashboard = () => {
               <DropdownMenuContent className="bg-[#12121a] border-gray-800 w-48">
                 <DropdownMenuLabel className="text-gray-500 text-xs">Admin Modules</DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-800" />
-                <DropdownMenuItem onClick={() => navigate('/super-admin')} className="text-gray-300 hover:bg-gray-800/50 cursor-pointer text-sm">
+                <DropdownMenuItem onClick={() => navigate('/boss')} className="text-gray-300 hover:bg-gray-800/50 cursor-pointer text-sm">
                   <Shield className="w-4 h-4 mr-2" />
                   Super Admin
                 </DropdownMenuItem>

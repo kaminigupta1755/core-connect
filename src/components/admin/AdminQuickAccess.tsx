@@ -60,10 +60,10 @@ const AdminQuickAccess = () => {
   }
 
   const menuItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, path: '/super-admin' },
-    { label: 'User Manager', icon: Users, path: '/super-admin/user-manager' },
-    { label: 'Role Manager', icon: Shield, path: '/super-admin/role-manager' },
-    { label: 'Permissions', icon: Key, path: '/super-admin/permission-matrix' },
+    { label: 'Dashboard', icon: LayoutDashboard, path: '/boss' },
+    { label: 'User Manager', icon: Users, path: '/boss' },
+    { label: 'Role Manager', icon: Shield, path: '/boss' },
+    { label: 'Permissions', icon: Key, path: '/boss' },
   ];
 
   return (

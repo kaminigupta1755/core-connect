@@ -315,7 +315,7 @@ const SoftwareWalaOwnerDashboard = () => {
                   <Button 
                     variant="outline" 
                     className="w-full justify-start bg-slate-800/50 border-slate-700/50 hover:bg-blue-600/20 hover:border-blue-500/50"
-                    onClick={() => navigate('/super-admin/user-management')}
+                    onClick={() => navigate('/boss')}
                   >
                     <Users className="w-4 h-4 mr-2" />
                     Employee Control
