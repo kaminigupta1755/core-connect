@@ -39,10 +39,10 @@ import BulkUserCreation from "@/pages/admin/BulkUserCreation";
 import RoleManagerPage from "@/pages/admin/RoleManagerPage";
 import SecureAdminDashboard from "@/pages/admin/SecureAdminDashboard";
 
-// Boss / Owner
+// Boss / Owner — single Command Center
 import BossPanel from "@/pages/BossPanel";
 import SoftwareWalaOwnerDashboard from "@/pages/owner/SoftwareWalaOwnerDashboard";
-import SuperAdminDashboard from "@/pages/SuperAdminDashboard";
+
 
 // Manager dashboards
 import LeadManager from "@/pages/LeadManager";
