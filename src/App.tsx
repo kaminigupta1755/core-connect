@@ -169,15 +169,18 @@ function App() {
                 <Route path="/internal-chat" element={<RequireAuth><InternalChat /></RequireAuth>} />
                 <Route path="/notifications" element={<RequireAuth><NotificationBuzzerConsole /></RequireAuth>} />
 
-                {/* Boss / Owner / Super Admin */}
+                {/* Single Command Center = Boss Panel — all admin/super-admin/command routes consolidate here */}
                 <Route path="/boss" element={<RequireRole allowed={["boss_owner", "super_admin", "admin", "ceo"]}><BossPanel /></RequireRole>} />
+                <Route path="/command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/owner" element={<RequireRole allowed={["boss_owner"]}><SoftwareWalaOwnerDashboard /></RequireRole>} />
                 <Route path="/super-admin" element={<Navigate to="/boss" replace />} />
+                <Route path="/super-admin/*" element={<Navigate to="/boss" replace />} />
 
-                {/* Admin */}
+                {/* Admin — consolidated into Command Center */}
                 <Route path="/admin" element={<Navigate to="/boss" replace />} />
                 <Route path="/admin/bulk-users" element={<RequireRole allowed={["boss_owner", "ceo"]}><BulkUserCreation /></RequireRole>} />
                 <Route path="/admin/roles" element={<RequireRole allowed={["boss_owner", "ceo"]}><RoleManagerPage /></RequireRole>} />
+
 
                 {/* Managers */}
                 <Route path="/lead-manager" element={<RequireAuth><LeadManager /></RequireAuth>} />
