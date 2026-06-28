@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 // Forbidden routes for Prime User - ZERO admin access
 const FORBIDDEN_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master',
   '/master-admin',
   '/finance',

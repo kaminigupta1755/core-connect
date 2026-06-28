@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 // Forbidden routes for User role - will be blocked
 const FORBIDDEN_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master',
   '/master-admin',
   '/finance',

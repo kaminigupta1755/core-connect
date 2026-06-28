@@ -52,7 +52,7 @@ const SuperAdminLogin = () => {
 
       toast.success("Login successful");
       // Redirect to the original Supreme Control panel
-      navigate("/super-admin");
+      navigate("/boss");
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed";
       setError(errorMessage);

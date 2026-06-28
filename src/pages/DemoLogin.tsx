@@ -50,7 +50,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     icon: Shield,
     color: 'from-amber-500 to-orange-600',
     description: 'Platform Commander • Global Control',
-    redirectPath: '/super-admin',
+    redirectPath: '/boss',
     tier: 'admin',
   },
   // TIER 3: ADMIN

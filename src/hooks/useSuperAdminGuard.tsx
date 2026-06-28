@@ -49,7 +49,7 @@ export const useSuperAdminGuard = () => {
     const currentPath = window.location.pathname;
     if (BLOCKED_ROUTES.some(route => currentPath.startsWith(route))) {
       toast.error('Access Denied: Route blocked for Super Admin');
-      navigate('/super-admin');
+      navigate('/boss');
     }
   }, [navigate]);
 

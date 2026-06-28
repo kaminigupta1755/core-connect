@@ -17,7 +17,7 @@ const FORBIDDEN_ROUTES = new Set([
   '/settings/security',
   '/settings/password', 
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master',
   '/payments',
   '/checkout',

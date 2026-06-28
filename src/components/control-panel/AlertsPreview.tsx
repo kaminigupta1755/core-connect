@@ -64,7 +64,7 @@ export const AlertsPreview: React.FC = memo(() => {
   const navigate = useNavigate();
 
   const handleViewAll = useCallback(() => {
-    navigate('/super-admin?role=boss_owner');
+    navigate('/boss?role=boss_owner');
   }, [navigate]);
 
   return (

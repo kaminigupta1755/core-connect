@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 // BLOCKED ROUTES - Influencer CANNOT access these
 const BLOCKED_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master-admin',
   '/finance',
   '/demo-manager',

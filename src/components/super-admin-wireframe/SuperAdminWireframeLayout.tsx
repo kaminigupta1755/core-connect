@@ -68,7 +68,7 @@ const SuperAdminWireframeLayout = ({
     }
 
     if (isBossOwner || isCEO) {
-      navigate("/super-admin");
+      navigate("/boss");
       return;
     }
 

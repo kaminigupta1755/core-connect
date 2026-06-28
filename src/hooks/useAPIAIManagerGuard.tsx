@@ -11,7 +11,7 @@ const BLOCKED_ROUTES = [
   '/payouts',
   '/admin',
   '/master',
-  '/super-admin',
+  '/boss',
   '/marketing',
   '/sales',
   '/billing',

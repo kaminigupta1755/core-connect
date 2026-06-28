@@ -12,7 +12,7 @@ const DEMO_ACCOUNTS: Record<string, { email: string; password: string; name: str
     name: 'Boss Owner',
     icon: Shield,
     color: 'from-yellow-500 to-amber-600',
-    dashboard: '/super-admin'
+    dashboard: '/boss'
   },
   'franchise': {
     email: 'demo.franchise@softwarevala.com',

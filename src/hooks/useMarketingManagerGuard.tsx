@@ -10,7 +10,7 @@ const BLOCKED_ROUTES = [
   "/master",
   "/server",
   "/partner",
-  "/super-admin",
+  "/boss",
 ];
 
 export const useMarketingManagerGuard = () => {

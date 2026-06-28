@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 // Forbidden routes for Prime role
 const FORBIDDEN_ROUTES = [
   '/admin',
-  '/super-admin',
+  '/boss',
   '/master',
   '/master-admin',
   '/finance',

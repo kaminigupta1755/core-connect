@@ -46,7 +46,7 @@ const BLOCKED_ROUTES = [
   '/finance',
   '/pricing',
   '/master',
-  '/super-admin',
+  '/boss',
   '/developer',
   '/sales',
   '/support',

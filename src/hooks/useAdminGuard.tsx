@@ -23,7 +23,7 @@ const BLOCKED_ROUTES = [
   '/infrastructure',
   '/wallet-edit',
   '/finance-edit',
-  '/super-admin',
+  '/boss',
   '/system-config',
 ];
 
