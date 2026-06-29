@@ -203,7 +203,7 @@ export function useRiskEngine() {
     try {
       const response = await supabase.functions.invoke('api-risk-engine', {
         body: {
-          path: '/command-center',
+          path: '/boss',
         },
       });
 
