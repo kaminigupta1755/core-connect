@@ -22648,6 +22648,140 @@ export type Database = {
         }
         Relationships: []
       }
+      system_health_incidents: {
+        Row: {
+          auto_resolved: boolean
+          created_at: string
+          detail: Json
+          detected_at: string
+          id: string
+          module_key: string
+          resolved_at: string | null
+          severity: string
+          title: string
+        }
+        Insert: {
+          auto_resolved?: boolean
+          created_at?: string
+          detail?: Json
+          detected_at?: string
+          id?: string
+          module_key: string
+          resolved_at?: string | null
+          severity: string
+          title: string
+        }
+        Update: {
+          auto_resolved?: boolean
+          created_at?: string
+          detail?: Json
+          detected_at?: string
+          id?: string
+          module_key?: string
+          resolved_at?: string | null
+          severity?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      system_health_modules: {
+        Row: {
+          avg_repair_ms: number
+          category: string
+          created_at: string
+          critical_level: number
+          error_count: number
+          health_pct: number
+          id: string
+          last_checked_at: string | null
+          last_healthy_at: string | null
+          meta: Json
+          module_key: string
+          module_name: string
+          recovery_count: number
+          status: string
+          updated_at: string
+          warning_level: number
+        }
+        Insert: {
+          avg_repair_ms?: number
+          category: string
+          created_at?: string
+          critical_level?: number
+          error_count?: number
+          health_pct?: number
+          id?: string
+          last_checked_at?: string | null
+          last_healthy_at?: string | null
+          meta?: Json
+          module_key: string
+          module_name: string
+          recovery_count?: number
+          status?: string
+          updated_at?: string
+          warning_level?: number
+        }
+        Update: {
+          avg_repair_ms?: number
+          category?: string
+          created_at?: string
+          critical_level?: number
+          error_count?: number
+          health_pct?: number
+          id?: string
+          last_checked_at?: string | null
+          last_healthy_at?: string | null
+          meta?: Json
+          module_key?: string
+          module_name?: string
+          recovery_count?: number
+          status?: string
+          updated_at?: string
+          warning_level?: number
+        }
+        Relationships: []
+      }
+      system_health_repairs: {
+        Row: {
+          action: string
+          attempted_at: string
+          detail: Json
+          duration_ms: number
+          id: string
+          incident_id: string | null
+          module_key: string
+          status: string
+        }
+        Insert: {
+          action: string
+          attempted_at?: string
+          detail?: Json
+          duration_ms?: number
+          id?: string
+          incident_id?: string | null
+          module_key: string
+          status: string
+        }
+        Update: {
+          action?: string
+          attempted_at?: string
+          detail?: Json
+          duration_ms?: number
+          id?: string
+          incident_id?: string | null
+          module_key?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_health_repairs_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "system_health_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       system_locks: {
         Row: {
           expires_at: string | null

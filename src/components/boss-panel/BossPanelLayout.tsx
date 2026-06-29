@@ -5,6 +5,7 @@ import { BossPanelSidebar } from './BossPanelSidebar';
 
 export type BossPanelSection = 
   | 'dashboard'
+  | 'self-healing'
   | 'live-activity'
   | 'hierarchy'
   | 'super-admins'

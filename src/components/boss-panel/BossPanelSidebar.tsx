@@ -18,7 +18,8 @@ import {
   Server,
   Brain,
   KeyRound,
-  UserCog
+  UserCog,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BossPanelSection } from './BossPanelLayout';
@@ -33,6 +34,7 @@ interface BossPanelSidebarProps {
 // LOCKED: Menu items with fixed icons (20px)
 const menuItems: { id: BossPanelSection; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'self-healing', label: 'Self-Healing', icon: Zap },
   { id: 'live-activity', label: 'Live Activity Stream', icon: Activity },
   { id: 'hierarchy', label: 'Hierarchy Control', icon: Network },
   { id: 'super-admins', label: 'Super Admins', icon: Users },

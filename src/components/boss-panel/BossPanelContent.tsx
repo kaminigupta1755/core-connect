@@ -16,6 +16,7 @@ import { CodePilot } from './sections/CodePilot';
 import { ServerHosting } from './sections/ServerHosting';
 import { ValaAIModuleContainer } from '@/components/vala-ai-module/ValaAIModuleContainer';
 import { AuthDashboard, AuthManagement } from './sections/AuthControl';
+import { SelfHealing } from './sections/SelfHealing';
 
 interface BossPanelContext {
   activeSection: BossPanelSection;
@@ -31,6 +32,8 @@ export function BossPanelContent(props?: Partial<BossPanelContext>) {
     switch (activeSection) {
       case 'dashboard':
         return <BossDashboard />;
+      case 'self-healing':
+        return <SelfHealing />;
       case 'live-activity':
         return <LiveActivityStream streamingOn={streamingOn} />;
       case 'hierarchy':
