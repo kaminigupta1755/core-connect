@@ -33,6 +33,8 @@ export function BossPanelContent(props?: Partial<BossPanelContext>) {
     switch (activeSection) {
       case 'dashboard':
         return <BossDashboard />;
+      case 'dashboards-hub':
+        return <DashboardsHub />;
       case 'self-healing':
         return <SelfHealing />;
       case 'live-activity':
