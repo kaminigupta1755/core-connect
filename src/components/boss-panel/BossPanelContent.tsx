@@ -17,6 +17,7 @@ import { ServerHosting } from './sections/ServerHosting';
 import { ValaAIModuleContainer } from '@/components/vala-ai-module/ValaAIModuleContainer';
 import { AuthDashboard, AuthManagement } from './sections/AuthControl';
 import { SelfHealing } from './sections/SelfHealing';
+import { DashboardsHub } from './sections/DashboardsHub';
 
 interface BossPanelContext {
   activeSection: BossPanelSection;
