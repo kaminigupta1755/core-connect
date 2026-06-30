@@ -2585,6 +2585,171 @@ export type Database = {
         }
         Relationships: []
       }
+      boss_announcements: {
+        Row: {
+          audience_role: string | null
+          body: string | null
+          created_at: string
+          created_by: string | null
+          ends_at: string | null
+          id: string
+          module: Database["public"]["Enums"]["boss_module"]
+          severity: Database["public"]["Enums"]["boss_severity"]
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          audience_role?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          id?: string
+          module: Database["public"]["Enums"]["boss_module"]
+          severity?: Database["public"]["Enums"]["boss_severity"]
+          starts_at?: string
+          title: string
+        }
+        Update: {
+          audience_role?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          id?: string
+          module?: Database["public"]["Enums"]["boss_module"]
+          severity?: Database["public"]["Enums"]["boss_severity"]
+          starts_at?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      boss_approvals: {
+        Row: {
+          action_key: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_reason: string | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          module: Database["public"]["Enums"]["boss_module"]
+          payload: Json
+          requested_by: string | null
+          requested_by_role: string | null
+          status: Database["public"]["Enums"]["boss_approval_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          action_key: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_reason?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          module: Database["public"]["Enums"]["boss_module"]
+          payload?: Json
+          requested_by?: string | null
+          requested_by_role?: string | null
+          status?: Database["public"]["Enums"]["boss_approval_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          action_key?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_reason?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          module?: Database["public"]["Enums"]["boss_module"]
+          payload?: Json
+          requested_by?: string | null
+          requested_by_role?: string | null
+          status?: Database["public"]["Enums"]["boss_approval_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      boss_live_status: {
+        Row: {
+          key: string
+          meta: Json
+          module: Database["public"]["Enums"]["boss_module"]
+          status: string
+          updated_at: string
+          value_num: number | null
+          value_text: string | null
+        }
+        Insert: {
+          key: string
+          meta?: Json
+          module: Database["public"]["Enums"]["boss_module"]
+          status: string
+          updated_at?: string
+          value_num?: number | null
+          value_text?: string | null
+        }
+        Update: {
+          key?: string
+          meta?: Json
+          module?: Database["public"]["Enums"]["boss_module"]
+          status?: string
+          updated_at?: string
+          value_num?: number | null
+          value_text?: string | null
+        }
+        Relationships: []
+      }
+      boss_notifications: {
+        Row: {
+          audience_role: string | null
+          audience_user_id: string | null
+          body: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          link: string | null
+          module: Database["public"]["Enums"]["boss_module"]
+          read_at: string | null
+          severity: Database["public"]["Enums"]["boss_severity"]
+          title: string
+        }
+        Insert: {
+          audience_role?: string | null
+          audience_user_id?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          link?: string | null
+          module: Database["public"]["Enums"]["boss_module"]
+          read_at?: string | null
+          severity?: Database["public"]["Enums"]["boss_severity"]
+          title: string
+        }
+        Update: {
+          audience_role?: string | null
+          audience_user_id?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          link?: string | null
+          module?: Database["public"]["Enums"]["boss_module"]
+          read_at?: string | null
+          severity?: Database["public"]["Enums"]["boss_severity"]
+          title?: string
+        }
+        Relationships: []
+      }
       boss_sessions: {
         Row: {
           boss_id: string | null
@@ -2619,6 +2784,54 @@ export type Database = {
             referencedColumns: ["boss_id"]
           },
         ]
+      }
+      boss_tasks: {
+        Row: {
+          assignee_role: string | null
+          assignee_user_id: string | null
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          due_at: string | null
+          id: string
+          module: Database["public"]["Enums"]["boss_module"]
+          priority: number
+          status: Database["public"]["Enums"]["boss_task_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assignee_role?: string | null
+          assignee_user_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          module: Database["public"]["Enums"]["boss_module"]
+          priority?: number
+          status?: Database["public"]["Enums"]["boss_task_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assignee_role?: string | null
+          assignee_user_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_at?: string | null
+          id?: string
+          module?: Database["public"]["Enums"]["boss_module"]
+          priority?: number
+          status?: Database["public"]["Enums"]["boss_task_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       box_action_logs: {
         Row: {
@@ -24930,6 +25143,89 @@ export type Database = {
       }
       authorize_role_access: { Args: { _user_id: string }; Returns: boolean }
       auto_expire_rentals: { Args: never; Returns: number }
+      boss_announce: {
+        Args: {
+          _audience_role?: string
+          _body?: string
+          _ends_at?: string
+          _module: Database["public"]["Enums"]["boss_module"]
+          _severity?: Database["public"]["Enums"]["boss_severity"]
+          _title: string
+        }
+        Returns: string
+      }
+      boss_create_task: {
+        Args: {
+          _assignee_role?: string
+          _assignee_user_id?: string
+          _description?: string
+          _due_at?: string
+          _module: Database["public"]["Enums"]["boss_module"]
+          _priority?: number
+          _title: string
+        }
+        Returns: string
+      }
+      boss_decide_approval: {
+        Args: { _approved: boolean; _id: string; _reason?: string }
+        Returns: {
+          action_key: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_reason: string | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          module: Database["public"]["Enums"]["boss_module"]
+          payload: Json
+          requested_by: string | null
+          requested_by_role: string | null
+          status: Database["public"]["Enums"]["boss_approval_status"]
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "boss_approvals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      boss_notify: {
+        Args: {
+          _audience_role?: string
+          _audience_user_id?: string
+          _body?: string
+          _link?: string
+          _module: Database["public"]["Enums"]["boss_module"]
+          _severity?: Database["public"]["Enums"]["boss_severity"]
+          _title: string
+        }
+        Returns: string
+      }
+      boss_request_approval: {
+        Args: {
+          _action_key: string
+          _description?: string
+          _expires_at?: string
+          _module: Database["public"]["Enums"]["boss_module"]
+          _payload?: Json
+          _title: string
+        }
+        Returns: string
+      }
+      boss_update_live_status: {
+        Args: {
+          _key: string
+          _meta?: Json
+          _module: Database["public"]["Enums"]["boss_module"]
+          _status: string
+          _value_num?: number
+          _value_text?: string
+        }
+        Returns: undefined
+      }
       breach_promise_with_penalty: {
         Args: { p_promise_id: string; p_reason?: string }
         Returns: Json
@@ -25097,6 +25393,7 @@ export type Database = {
         }
         Returns: string
       }
+      current_user_role_text: { Args: never; Returns: string }
       end_remote_assist_session: {
         Args: { p_reason?: string; p_session_id: string }
         Returns: Json
@@ -25207,6 +25504,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_boss_level: { Args: { _uid: string }; Returns: boolean }
       is_demo_manager: { Args: { _user_id?: string }; Returns: boolean }
       is_developer_verified: { Args: { p_user_id: string }; Returns: boolean }
       is_device_trusted: {
@@ -25694,6 +25992,35 @@ export type Database = {
         | "boss_owner"
         | "ceo"
         | "reseller_manager"
+      boss_approval_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "cancelled"
+        | "expired"
+      boss_module:
+        | "legal"
+        | "hr"
+        | "finance"
+        | "lead"
+        | "franchise"
+        | "reseller"
+        | "influencer"
+        | "marketing"
+        | "seo"
+        | "pro"
+        | "server"
+        | "demo"
+        | "ams"
+        | "security"
+        | "system"
+      boss_severity: "info" | "success" | "warning" | "critical"
+      boss_task_status:
+        | "open"
+        | "in_progress"
+        | "blocked"
+        | "done"
+        | "cancelled"
       critical_action_type:
         | "delete_data"
         | "edit_financial"
@@ -25958,6 +26285,32 @@ export const Constants = {
         "ceo",
         "reseller_manager",
       ],
+      boss_approval_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "cancelled",
+        "expired",
+      ],
+      boss_module: [
+        "legal",
+        "hr",
+        "finance",
+        "lead",
+        "franchise",
+        "reseller",
+        "influencer",
+        "marketing",
+        "seo",
+        "pro",
+        "server",
+        "demo",
+        "ams",
+        "security",
+        "system",
+      ],
+      boss_severity: ["info", "success", "warning", "critical"],
+      boss_task_status: ["open", "in_progress", "blocked", "done", "cancelled"],
       critical_action_type: [
         "delete_data",
         "edit_financial",
