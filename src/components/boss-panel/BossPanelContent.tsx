@@ -18,6 +18,7 @@ import { ValaAIModuleContainer } from '@/components/vala-ai-module/ValaAIModuleC
 import { AuthDashboard, AuthManagement } from './sections/AuthControl';
 import { SelfHealing } from './sections/SelfHealing';
 import { DashboardsHub } from './sections/DashboardsHub';
+import { NotificationsApprovals } from './sections/NotificationsApprovals';
 
 interface BossPanelContext {
   activeSection: BossPanelSection;
@@ -35,6 +36,8 @@ export function BossPanelContent(props?: Partial<BossPanelContext>) {
         return <BossDashboard />;
       case 'dashboards-hub':
         return <DashboardsHub />;
+      case 'notifications-approvals':
+        return <NotificationsApprovals />;
       case 'self-healing':
         return <SelfHealing />;
       case 'live-activity':
