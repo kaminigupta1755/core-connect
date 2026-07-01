@@ -55,52 +55,24 @@ const menuItems: { id: BossPanelSection; label: string; icon: React.ElementType 
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
-// ===== LOCKED COLORS: Dark Navy Blue Sidebar =====
-// DO NOT CHANGE - Final approved color scheme
-const SIDEBAR_COLORS = {
-  bg: '#0a1628',           // Dark Navy background
-  bgGradient: 'linear-gradient(180deg, #0a1628 0%, #0d1b2a 100%)',
-  border: '#1e3a5f',       // Navy border
-  activeHighlight: '#2563eb', // Bright Blue active state
-  hoverBg: 'rgba(37, 99, 235, 0.15)',
-  text: '#ffffff',
-  textMuted: 'rgba(255, 255, 255, 0.7)',
-  iconColor: '#60a5fa',    // Soft blue icons
-};
-
-export function BossPanelSidebar({ 
-  activeSection, 
-  onSectionChange, 
-  collapsed, 
-  onCollapsedChange 
+export function BossPanelSidebar({
+  activeSection,
+  onSectionChange,
+  collapsed,
+  onCollapsedChange
 }: BossPanelSidebarProps) {
   return (
     <motion.aside
       initial={false}
-      animate={{ width: collapsed ? 200 : 260 }}
-      className="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 flex flex-col"
-      style={{ 
-        background: SIDEBAR_COLORS.bgGradient,
-        borderRight: `1px solid ${SIDEBAR_COLORS.border}`,
-      }}
+      animate={{ width: collapsed ? 80 : 260 }}
+      className="fixed left-0 top-16 h-[calc(100vh-64px)] z-40 flex flex-col border-r border-border bg-background/70 backdrop-blur-xl"
     >
       {/* Collapse Toggle */}
       <button
         onClick={() => onCollapsedChange(!collapsed)}
-        className="absolute -right-3 top-6 flex items-center justify-center transition-colors rounded-full"
-        style={{
-          width: '24px',
-          height: '24px',
-          background: SIDEBAR_COLORS.activeHighlight,
-          border: '2px solid white',
-          color: 'white'
-        }}
+        className="absolute -right-3 top-6 flex items-center justify-center rounded-full w-6 h-6 bg-primary text-primary-foreground border-2 border-background shadow-[var(--shadow-card-hover)] glow-primary"
       >
-        {collapsed ? (
-          <ChevronRight className="w-3.5 h-3.5" />
-        ) : (
-          <ChevronLeft className="w-3.5 h-3.5" />
-        )}
+        {collapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-3.5 h-3.5" />}
       </button>
 
       {/* Navigation */}
@@ -108,39 +80,39 @@ export function BossPanelSidebar({
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
-          
+
           return (
             <motion.button
               key={item.id}
               onClick={() => onSectionChange(item.id)}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all text-left"
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all border-l-2",
+                isActive
+                  ? "bg-primary/15 text-foreground border-primary glow-primary"
+                  : "text-muted-foreground border-transparent hover:bg-card/60 hover:text-foreground"
               )}
-              style={{
-                background: isActive ? SIDEBAR_COLORS.activeHighlight : 'transparent',
-                color: SIDEBAR_COLORS.text,
-                borderLeft: isActive ? '3px solid #60a5fa' : '3px solid transparent'
-              }}
               whileTap={{ scale: 0.98 }}
             >
-              <Icon className="w-5 h-5 flex-shrink-0" style={{ color: isActive ? '#ffffff' : SIDEBAR_COLORS.iconColor }} />
-              <span className="truncate text-sm font-medium" style={{ color: SIDEBAR_COLORS.text }}>
-                {item.label}
-              </span>
+              <Icon className={cn("w-5 h-5 flex-shrink-0", isActive ? "text-primary" : "text-muted-foreground")} />
+              {!collapsed && (
+                <span className="truncate text-sm font-medium">{item.label}</span>
+              )}
             </motion.button>
           );
         })}
       </nav>
 
       {/* Footer */}
-      <div className="p-4" style={{ borderTop: `1px solid ${SIDEBAR_COLORS.border}` }}>
-        <div className="text-center uppercase tracking-widest text-[10px]" style={{ color: SIDEBAR_COLORS.textMuted }}>
-          Boss Role Principle
+      {!collapsed && (
+        <div className="p-4 border-t border-border">
+          <div className="text-center uppercase tracking-widest text-[10px] text-muted-foreground">
+            Boss Role Principle
+          </div>
+          <div className="text-center mt-1 text-[9px] text-foreground/80">
+            See Everything • Change Nothing Casually
+          </div>
         </div>
-        <div className="text-center mt-1 text-[9px]" style={{ color: SIDEBAR_COLORS.text }}>
-          See Everything • Change Nothing Casually
-        </div>
-      </div>
+      )}
     </motion.aside>
   );
 }

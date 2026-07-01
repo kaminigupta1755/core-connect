@@ -31,7 +31,16 @@ const LegalPoliciesTerms = () => {
         .select("id,title,doc_type,version,status,region,created_at")
         .order("created_at", { ascending: false });
       if (!alive) return;
-      setDocs((data ?? []) as LegalDoc[]);
+      const rows: LegalDoc[] = (data ?? []).map((r: any) => ({
+        id: r.id,
+        title: r.title,
+        doc_type: r.doc_type ?? null,
+        version: r.version ?? null,
+        status: r.status ?? null,
+        region: Array.isArray(r.region) ? r.region : r.region ? [r.region] : null,
+        created_at: r.created_at ?? null,
+      }));
+      setDocs(rows);
       setLoading(false);
     })();
     return () => { alive = false; };
@@ -80,7 +89,7 @@ const LegalPoliciesTerms = () => {
                     <TableCell className="text-white font-medium">{d.title}</TableCell>
                     <TableCell className="text-slate-300">{d.doc_type ?? "—"}</TableCell>
                     <TableCell className="text-slate-300">v{d.version ?? "—"}</TableCell>
-                    <TableCell className="text-slate-300">{d.region ?? "—"}</TableCell>
+                    <TableCell className="text-slate-300">{d.region?.join(", ") ?? "—"}</TableCell>
                     <TableCell><Badge>{d.status ?? "—"}</Badge></TableCell>
                     <TableCell className="text-slate-400 text-xs">{d.created_at ? new Date(d.created_at).toLocaleDateString() : "—"}</TableCell>
                     <TableCell>
