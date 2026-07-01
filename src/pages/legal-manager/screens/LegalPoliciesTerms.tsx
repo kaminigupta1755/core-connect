@@ -12,11 +12,11 @@ import { bossDispatch } from "@/hooks/boss-core";
 interface LegalDoc {
   id: string;
   title: string;
-  document_type: string | null;
+  doc_type: string | null;
   version: string | null;
   status: string | null;
-  region: string | null;
-  updated_at: string | null;
+  region: string[] | null;
+  created_at: string | null;
 }
 
 const LegalPoliciesTerms = () => {
