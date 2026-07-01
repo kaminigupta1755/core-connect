@@ -12,11 +12,11 @@ import { bossDispatch } from "@/hooks/boss-core";
 interface LegalDoc {
   id: string;
   title: string;
-  document_type: string | null;
+  doc_type: string | null;
   version: string | null;
   status: string | null;
-  region: string | null;
-  updated_at: string | null;
+  region: string[] | null;
+  created_at: string | null;
 }
 
 const LegalPoliciesTerms = () => {
@@ -28,8 +28,8 @@ const LegalPoliciesTerms = () => {
     (async () => {
       const { data } = await supabase
         .from("legal_documents")
-        .select("id,title,document_type,version,status,region,updated_at")
-        .order("updated_at", { ascending: false });
+        .select("id,title,doc_type,version,status,region,created_at")
+        .order("created_at", { ascending: false });
       if (!alive) return;
       setDocs((data ?? []) as LegalDoc[]);
       setLoading(false);
@@ -78,11 +78,11 @@ const LegalPoliciesTerms = () => {
                 {docs.map((d) => (
                   <TableRow key={d.id} className="border-slate-700/50">
                     <TableCell className="text-white font-medium">{d.title}</TableCell>
-                    <TableCell className="text-slate-300">{d.document_type ?? "—"}</TableCell>
+                    <TableCell className="text-slate-300">{d.doc_type ?? "—"}</TableCell>
                     <TableCell className="text-slate-300">v{d.version ?? "—"}</TableCell>
                     <TableCell className="text-slate-300">{d.region ?? "—"}</TableCell>
                     <TableCell><Badge>{d.status ?? "—"}</Badge></TableCell>
-                    <TableCell className="text-slate-400 text-xs">{d.updated_at ? new Date(d.updated_at).toLocaleDateString() : "—"}</TableCell>
+                    <TableCell className="text-slate-400 text-xs">{d.created_at ? new Date(d.created_at).toLocaleDateString() : "—"}</TableCell>
                     <TableCell>
                       <Button size="sm" variant="ghost" onClick={() => proposeUpdate(d)}>
                         <Edit className="h-4 w-4 text-amber-400" />

@@ -108,18 +108,20 @@ export function BossPanelHeader({ streamingOn, onStreamingToggle }: BossPanelHea
   };
 
   return (
-    <header 
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16 border-b border-border/40 backdrop-blur-xl"
-      style={{ backgroundImage: 'var(--gradient-primary)' }}
+    <header
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 h-16 border-b border-border bg-background/70 backdrop-blur-xl"
     >
-      {/* LEFT: Logo + Command Center brand */}
+      {/* LEFT: Logo + Command Center brand — matches home MarketHeader */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-background/95 shadow-lg">
-          <span className="font-bold text-lg bg-gradient-to-br from-primary to-magenta bg-clip-text text-transparent">C</span>
+        <div
+          className="flex items-center justify-center w-10 h-10 rounded-xl shadow-[var(--shadow-card-hover)] glow-primary"
+          style={{ backgroundImage: 'var(--gradient-primary)' }}
+        >
+          <span className="font-bold text-lg text-primary-foreground">C</span>
         </div>
         <div className="hidden sm:flex flex-col leading-tight">
-          <span className="text-sm font-semibold tracking-wide text-primary-foreground">Command Center</span>
-          <span className="text-[11px] text-primary-foreground/70">Single Source of Truth</span>
+          <span className="text-sm font-semibold tracking-wide text-foreground">Command Center</span>
+          <span className="text-[11px] text-muted-foreground">Single Source of Truth</span>
         </div>
       </div>
 
