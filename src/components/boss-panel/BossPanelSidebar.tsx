@@ -40,7 +40,7 @@ const menuItems: { id: BossPanelSection; label: string; icon: React.ElementType 
   { id: 'self-healing', label: 'Self-Healing', icon: Zap },
   { id: 'live-activity', label: 'Live Activity Stream', icon: Activity },
   { id: 'hierarchy', label: 'Hierarchy Control', icon: Network },
-  { id: 'super-admins', label: 'Super Admins', icon: Users },
+  { id: 'super-admins', label: 'Administrators', icon: Users },
   { id: 'roles', label: 'Roles & Permissions', icon: Shield },
   { id: 'modules', label: 'System Modules', icon: Boxes },
   { id: 'products', label: 'Product & Demo', icon: Package },
