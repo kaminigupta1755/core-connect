@@ -120,7 +120,7 @@ export function BossPanelHeader({ streamingOn, onStreamingToggle }: BossPanelHea
           <span className="font-bold text-lg text-primary-foreground">C</span>
         </div>
         <div className="hidden sm:flex flex-col leading-tight">
-          <span className="text-sm font-semibold tracking-wide text-foreground">Command Center</span>
+          <span className="text-sm font-semibold tracking-wide text-foreground">Control Panel</span>
           <span className="text-[11px] text-muted-foreground">Single Source of Truth</span>
         </div>
       </div>
