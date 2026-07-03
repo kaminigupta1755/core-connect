@@ -1,5 +1,5 @@
-import MasterControlCenter from '@/pages/master-control/MasterControlCenter';
+import GlobalControlCenter from '@/pages/super-admin/GlobalControlCenter';
 
 export default function BossPanel() {
-  return <MasterControlCenter />;
+  return <GlobalControlCenter />;
 }
