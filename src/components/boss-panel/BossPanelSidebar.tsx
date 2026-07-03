@@ -106,7 +106,7 @@ export function BossPanelSidebar({
       {!collapsed && (
         <div className="p-4 border-t border-border">
           <div className="text-center uppercase tracking-widest text-[10px] text-muted-foreground">
-            Boss Role Principle
+            Control Principle
           </div>
           <div className="text-center mt-1 text-[9px] text-foreground/80">
             See Everything • Change Nothing Casually
