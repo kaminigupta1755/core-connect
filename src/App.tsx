@@ -41,6 +41,7 @@ import SecureAdminDashboard from "@/pages/admin/SecureAdminDashboard";
 
 // Boss / Owner — single Command Center
 import BossPanel from "@/pages/BossPanel";
+import RequireBossOwner from "@/components/auth/RequireBossOwner";
 import SoftwareWalaOwnerDashboard from "@/pages/owner/SoftwareWalaOwnerDashboard";
 
 
@@ -169,8 +170,9 @@ function App() {
                 <Route path="/internal-chat" element={<RequireAuth><InternalChat /></RequireAuth>} />
                 <Route path="/notifications" element={<RequireAuth><NotificationBuzzerConsole /></RequireAuth>} />
 
-                {/* Single Command Center = Boss Panel — all admin/super-admin/command routes consolidate here */}
-                <Route path="/boss" element={<RequireRole allowed={["boss_owner", "super_admin", "admin", "ceo"]}><BossPanel /></RequireRole>} />
+                {/* Global Control Center — STRICTLY boss_owner only.
+                    Wrong roles get redirected to their own role home (see src/lib/roleRoutes.ts). */}
+                <Route path="/boss" element={<RequireBossOwner><BossPanel /></RequireBossOwner>} />
                 <Route path="/command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/owner" element={<RequireRole allowed={["boss_owner"]}><SoftwareWalaOwnerDashboard /></RequireRole>} />
                 <Route path="/super-admin" element={<Navigate to="/boss" replace />} />
