@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { resolveHome } from "@/lib/roleRoutes";
 
 type RequireRoleProps = {
   allowed: string[];
@@ -101,9 +102,9 @@ export default function RequireRole({ allowed, children, masterOnly = false }: R
 
   if (!userRole) return <Navigate to="/pending-approval" replace />;
 
-  // Boss Owner-only routes
+  // Boss Owner-only routes → send wrong role to their own dashboard
   if (masterOnly && !isBossOwner) {
-    return <Navigate to="/access-denied" replace />;
+    return <Navigate to={resolveHome(userRole)} replace />;
   }
 
   // Boss Owner and CEO get direct access (bypass role check)
@@ -117,7 +118,8 @@ export default function RequireRole({ allowed, children, masterOnly = false }: R
     if (userRole === 'ceo' && !masterOnly) {
       return <>{children}</>;
     }
-    return <Navigate to="/access-denied" replace />;
+    // Redirect to the user's own role home instead of a generic denial page
+    return <Navigate to={resolveHome(userRole)} replace />;
   }
 
   // Non-privileged roles must be approved
