@@ -161,6 +161,8 @@ function App() {
 
                 {/* Authenticated user */}
                 <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                <Route path="/me" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboards" element={<RequireAuth><DashboardDirectory /></RequireAuth>} />
                 <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
                 <Route path="/system-settings" element={<RequireAuth><SystemSettings /></RequireAuth>} />
                 <Route path="/client-portal" element={<RequireAuth><ClientPortal /></RequireAuth>} />
