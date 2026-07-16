@@ -16,6 +16,7 @@ import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import Settings from "@/pages/Settings";
 import Dashboard from "@/pages/Dashboard";
+import DashboardDirectory from "@/pages/DashboardDirectory";
 import SystemSettings from "@/pages/SystemSettings";
 
 // Auth flows
