@@ -18,6 +18,7 @@ import Settings from "@/pages/Settings";
 import Dashboard from "@/pages/Dashboard";
 import DashboardDirectory from "@/pages/DashboardDirectory";
 import SystemSettings from "@/pages/SystemSettings";
+import SessionExpiredPage from "@/pages/error/SessionExpiredPage";
 
 // Auth flows
 import RoleBasedLogin from "@/pages/auth/RoleBasedLogin";
@@ -39,6 +40,8 @@ import DemoLogin from "@/pages/DemoLogin";
 import BulkUserCreation from "@/pages/admin/BulkUserCreation";
 import RoleManagerPage from "@/pages/admin/RoleManagerPage";
 import SecureAdminDashboard from "@/pages/admin/SecureAdminDashboard";
+import SuperAdminDashboard from "@/pages/SuperAdminDashboard";
+import CEODashboard from "@/pages/super-admin-system/RoleSwitch/CEODashboard";
 
 // Boss / Owner — single Command Center
 import BossPanel from "@/pages/BossPanel";
@@ -65,7 +68,9 @@ import IncidentCrisisDashboard from "@/pages/IncidentCrisisDashboard";
 
 // Role-based dashboards
 import DeveloperDashboard from "@/pages/DeveloperDashboard";
+import SecureDeveloperDashboard from "@/pages/developer/SecureDeveloperDashboard";
 import FranchiseDashboard from "@/pages/FranchiseDashboard";
+import FranchiseOwnerDashboard from "@/pages/franchise/Dashboard";
 import FranchiseLanding from "@/pages/FranchiseLanding";
 import FranchiseManagement from "@/pages/FranchiseManagement";
 import ResellerDashboard from "@/pages/ResellerDashboard";
@@ -75,6 +80,7 @@ import InfluencerDashboard from "@/pages/InfluencerDashboard";
 import InfluencerManager from "@/pages/InfluencerManager";
 import PrimeUserDashboard from "@/pages/PrimeUserDashboard";
 import SimpleUserDashboard from "@/pages/SimpleUserDashboard";
+import UserDashboard from "@/pages/user/UserDashboard";
 import ClientPortal from "@/pages/ClientPortal";
 
 
@@ -99,6 +105,17 @@ import PersonalChat from "@/pages/PersonalChat";
 import InternalSupportAI from "@/pages/InternalSupportAI";
 import NotificationBuzzerConsole from "@/pages/NotificationBuzzerConsole";
 import APIIntegrationDashboard from "@/pages/APIIntegrationDashboard";
+import AIOptimizationConsole from "@/pages/ai-console/AIOptimizationConsole";
+import APIManagerDashboard from "@/pages/api-manager/APIManagerDashboard";
+import SecureAPIAIManagerDashboard from "@/pages/api-ai-manager/SecureAPIAIManagerDashboard";
+import ServerManagerDashboard from "@/pages/server-manager/ServerManagerDashboard";
+import SecurityCommandCenter from "@/pages/security-command/SecurityCommandCenter";
+import SafeAssistDashboard from "@/pages/safe-assist/SafeAssistDashboard";
+import AssistManagerDashboard from "@/pages/assist-manager/AssistManagerDashboard";
+import PromiseTrackerDashboard from "@/pages/promise-tracker/PromiseTrackerDashboard";
+import PromiseManagementDashboard from "@/pages/promise-management/PromiseManagementDashboard";
+import SalesCRMDashboard from "@/pages/sales-crm/SalesCRMDashboard";
+import SalesCRMAuthPage from "@/pages/sales-crm/SalesCRMAuthPage";
 import ApplyPortal from "@/pages/ApplyPortal";
 import CareerPortal from "@/pages/CareerPortal";
 
@@ -146,9 +163,11 @@ function App() {
                 <Route path="/pending-approval" element={<PendingApproval />} />
                 <Route path="/account-suspension" element={<AccountSuspension />} />
                 <Route path="/access-denied" element={<AccessDenied />} />
+                <Route path="/session-expired" element={<SessionExpiredPage />} />
 
                 {/* Demos / Marketplace */}
                 <Route path="/demos" element={<SimpleDemoList />} />
+                <Route path="/demos/public" element={<Navigate to="/demos" replace />} />
                 <Route path="/demo/:id" element={<SimpleDemoView />} />
                 <Route path="/demo-access" element={<DemoAccess />} />
                 <Route path="/demo-credentials" element={<DemoCredentials />} />
@@ -168,7 +187,10 @@ function App() {
                 <Route path="/system-settings" element={<RequireAuth><SystemSettings /></RequireAuth>} />
                 <Route path="/client-portal" element={<RequireAuth><ClientPortal /></RequireAuth>} />
                 <Route path="/simple-user" element={<RequireAuth><SimpleUserDashboard /></RequireAuth>} />
+                <Route path="/user-dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
+                <Route path="/user/dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
                 <Route path="/prime" element={<RequireAuth><PrimeUserDashboard /></RequireAuth>} />
+                <Route path="/prime-user" element={<Navigate to="/prime" replace />} />
                 <Route path="/personal-chat" element={<RequireAuth><PersonalChat /></RequireAuth>} />
                 <Route path="/internal-chat" element={<RequireAuth><InternalChat /></RequireAuth>} />
                 <Route path="/notifications" element={<RequireAuth><NotificationBuzzerConsole /></RequireAuth>} />
@@ -176,50 +198,91 @@ function App() {
                 {/* Global Control Center — STRICTLY boss_owner only.
                     Wrong roles get redirected to their own role home (see src/lib/roleRoutes.ts). */}
                 <Route path="/boss" element={<RequireBossOwner><BossPanel /></RequireBossOwner>} />
+                <Route path="/boss/*" element={<RequireBossOwner><BossPanel /></RequireBossOwner>} />
                 <Route path="/command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/owner" element={<RequireRole allowed={["boss_owner"]}><SoftwareWalaOwnerDashboard /></RequireRole>} />
-                <Route path="/super-admin" element={<Navigate to="/boss" replace />} />
-                <Route path="/super-admin/*" element={<Navigate to="/boss" replace />} />
+                <Route path="/super-admin-home" element={<RequireRole allowed={["super_admin"]}><SuperAdminDashboard /></RequireRole>} />
+                <Route path="/super-admin-dashboard" element={<Navigate to="/super-admin-home" replace />} />
+                <Route path="/super-admin" element={<Navigate to="/super-admin-home" replace />} />
+                <Route path="/super-admin/*" element={<Navigate to="/super-admin-home" replace />} />
+                <Route path="/ceo-dashboard" element={<RequireRole allowed={["ceo"]}><CEODashboard /></RequireRole>} />
 
-                {/* Admin — consolidated into Command Center */}
-                <Route path="/admin" element={<Navigate to="/boss" replace />} />
-                <Route path="/admin/bulk-users" element={<RequireRole allowed={["boss_owner", "ceo"]}><BulkUserCreation /></RequireRole>} />
-                <Route path="/admin/roles" element={<RequireRole allowed={["boss_owner", "ceo"]}><RoleManagerPage /></RequireRole>} />
+                {/* Admin */}
+                <Route path="/admin-dashboard" element={<RequireRole allowed={["admin"]}><SecureAdminDashboard /></RequireRole>} />
+                <Route path="/admin" element={<Navigate to="/admin-dashboard" replace />} />
+                <Route path="/admin/bulk-users" element={<RequireRole allowed={["boss_owner", "ceo", "admin"]}><BulkUserCreation /></RequireRole>} />
+                <Route path="/admin/roles" element={<RequireRole allowed={["boss_owner", "ceo", "admin"]}><RoleManagerPage /></RequireRole>} />
 
 
                 {/* Managers */}
                 <Route path="/lead-manager" element={<RequireAuth><LeadManager /></RequireAuth>} />
+                <Route path="/leads" element={<Navigate to="/lead-manager" replace />} />
                 <Route path="/task-manager" element={<RequireAuth><TaskManager /></RequireAuth>} />
+                <Route path="/tasks" element={<Navigate to="/task-manager" replace />} />
                 <Route path="/demo-manager" element={<RequireAuth><DemoManagerDashboard /></RequireAuth>} />
                 <Route path="/product-demo-manager" element={<RequireAuth><ProductDemoManager /></RequireAuth>} />
                 <Route path="/finance-manager" element={<RequireAuth><FinanceManager /></RequireAuth>} />
+                <Route path="/finance" element={<Navigate to="/finance-manager" replace />} />
                 <Route path="/legal-manager" element={<RequireAuth><LegalComplianceManager /></RequireAuth>} />
+                <Route path="/legal" element={<Navigate to="/legal-manager" replace />} />
+                <Route path="/legal-manager-secure" element={<Navigate to="/legal-manager" replace />} />
                 <Route path="/marketing-manager" element={<RequireAuth><MarketingManager /></RequireAuth>} />
+                <Route path="/marketing" element={<Navigate to="/marketing-manager" replace />} />
+                <Route path="/marketing-manager-secure" element={<Navigate to="/marketing-manager" replace />} />
                 <Route path="/performance-manager" element={<RequireAuth><PerformanceManager /></RequireAuth>} />
+                <Route path="/performance" element={<Navigate to="/performance-manager" replace />} />
                 <Route path="/rnd" element={<RequireAuth><RnDDashboard /></RequireAuth>} />
+                <Route path="/rnd-dashboard" element={<Navigate to="/rnd" replace />} />
                 <Route path="/hr" element={<RequireAuth><HRDashboard /></RequireAuth>} />
+                <Route path="/hr-dashboard" element={<Navigate to="/hr" replace />} />
                 <Route path="/seo" element={<RequireAuth><SEODashboard /></RequireAuth>} />
+                <Route path="/seo-dashboard" element={<Navigate to="/seo" replace />} />
                 <Route path="/support" element={<RequireAuth><SupportDashboard /></RequireAuth>} />
+                <Route path="/support-dashboard" element={<Navigate to="/support" replace />} />
+                <Route path="/sales" element={<Navigate to="/sales-support" replace />} />
                 <Route path="/sales-support" element={<RequireAuth><SalesSupportDashboard /></RequireAuth>} />
                 <Route path="/client-success" element={<RequireAuth><ClientSuccessDashboard /></RequireAuth>} />
+                <Route path="/clients" element={<Navigate to="/client-success" replace />} />
                 <Route path="/incident-crisis" element={<RequireAuth><IncidentCrisisDashboard /></RequireAuth>} />
 
                 {/* Role-specific */}
                 <Route path="/developer" element={<RequireAuth><DeveloperDashboard /></RequireAuth>} />
+                <Route path="/developer-dashboard" element={<Navigate to="/developer" replace />} />
+                <Route path="/developer/secure-dashboard" element={<RequireAuth><SecureDeveloperDashboard /></RequireAuth>} />
                 <Route path="/dev-command-center" element={<Navigate to="/boss" replace />} />
                 <Route path="/franchise" element={<RequireAuth><FranchiseDashboard /></RequireAuth>} />
+                <Route path="/franchise-dashboard" element={<Navigate to="/franchise" replace />} />
+                <Route path="/franchise/dashboard" element={<RequireAuth><FranchiseOwnerDashboard /></RequireAuth>} />
                 <Route path="/franchise-management" element={<RequireAuth><FranchiseManagement /></RequireAuth>} />
                 <Route path="/reseller" element={<RequireAuth><ResellerDashboard /></RequireAuth>} />
+                <Route path="/reseller-dashboard" element={<Navigate to="/reseller" replace />} />
                 <Route path="/reseller-portal" element={<RequireAuth><ResellerPortal /></RequireAuth>} />
                 <Route path="/influencer" element={<RequireAuth><InfluencerDashboard /></RequireAuth>} />
+                <Route path="/influencer-dashboard" element={<Navigate to="/influencer" replace />} />
                 <Route path="/influencer-manager" element={<RequireAuth><InfluencerManager /></RequireAuth>} />
                 <Route path="/influencer-command" element={<Navigate to="/boss" replace />} />
 
 
                 {/* AI / Support / Integration */}
                 <Route path="/over-ai" element={<RequireAuth><OverAI /></RequireAuth>} />
+                <Route path="/ai-console" element={<RequireAuth><AIOptimizationConsole /></RequireAuth>} />
                 <Route path="/internal-support-ai" element={<RequireAuth><InternalSupportAI /></RequireAuth>} />
                 <Route path="/api-integration" element={<RequireAuth><APIIntegrationDashboard /></RequireAuth>} />
+                <Route path="/api-integrations" element={<Navigate to="/api-integration" replace />} />
+                <Route path="/api-manager" element={<RequireAuth><APIManagerDashboard /></RequireAuth>} />
+                <Route path="/api-manager/*" element={<RequireAuth><APIManagerDashboard /></RequireAuth>} />
+                <Route path="/api-ai-manager" element={<RequireAuth><SecureAPIAIManagerDashboard /></RequireAuth>} />
+                <Route path="/api-ai-manager-secure" element={<RequireAuth><SecureAPIAIManagerDashboard /></RequireAuth>} />
+                <Route path="/server-manager" element={<RequireAuth><ServerManagerDashboard /></RequireAuth>} />
+                <Route path="/server-manager/*" element={<RequireAuth><ServerManagerDashboard /></RequireAuth>} />
+                <Route path="/security-command" element={<RequireAuth><SecurityCommandCenter /></RequireAuth>} />
+                <Route path="/security-dashboard" element={<Navigate to="/security-command" replace />} />
+                <Route path="/safe-assist" element={<RequireAuth><SafeAssistDashboard /></RequireAuth>} />
+                <Route path="/assist-manager" element={<RequireAuth><AssistManagerDashboard /></RequireAuth>} />
+                <Route path="/promise-tracker" element={<RequireAuth><PromiseTrackerDashboard /></RequireAuth>} />
+                <Route path="/promise-management" element={<RequireAuth><PromiseManagementDashboard /></RequireAuth>} />
+                <Route path="/sales-crm" element={<SalesCRMDashboard />} />
+                <Route path="/sales-crm/auth" element={<SalesCRMAuthPage />} />
 
                 {/* Achievement Management System */}
                 <Route path="/ams" element={<RequireRole allowed={["boss_owner", "super_admin", "admin", "ceo", "franchise", "reseller", "developer"]}><AMSLayout /></RequireRole>}>
