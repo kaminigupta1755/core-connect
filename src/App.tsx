@@ -16,6 +16,7 @@ import Auth from "@/pages/Auth";
 import NotFound from "@/pages/NotFound";
 import Settings from "@/pages/Settings";
 import Dashboard from "@/pages/Dashboard";
+import DashboardDirectory from "@/pages/DashboardDirectory";
 import SystemSettings from "@/pages/SystemSettings";
 
 // Auth flows
@@ -161,6 +162,8 @@ function App() {
 
                 {/* Authenticated user */}
                 <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+                <Route path="/me" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboards" element={<RequireAuth><DashboardDirectory /></RequireAuth>} />
                 <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
                 <Route path="/system-settings" element={<RequireAuth><SystemSettings /></RequireAuth>} />
                 <Route path="/client-portal" element={<RequireAuth><ClientPortal /></RequireAuth>} />
