@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
+import { resolveHome } from '@/lib/roleRoutes';
 
 // ============================================
 // ROLE → DASHBOARD ROUTING (ENTERPRISE LOCKED)
@@ -15,9 +16,9 @@ const ROLE_DASHBOARD_MAP: Record<string, string> = {
   // ═══════════════════════════════════════════
   boss_owner: '/boss',
   master: '/boss',
-  super_admin: '/boss',
-  admin: '/boss',
-  ceo: '/boss',
+  super_admin: '/super-admin-home',
+  admin: '/admin-dashboard',
+  ceo: '/ceo-dashboard',
 
   // ═══════════════════════════════════════════
   // TIER 2: COUNTRY / AREA MANAGEMENT
@@ -38,19 +39,19 @@ const ROLE_DASHBOARD_MAP: Record<string, string> = {
   // ═══════════════════════════════════════════
   developer: '/developer',
   server_manager: '/server-manager',
-  api_security: '/api-integrations',
+  api_security: '/api-integration',
   ai_manager: '/ai-console',
-  r_and_d: '/rnd-dashboard',
-  rnd_manager: '/rnd-dashboard',
+  r_and_d: '/rnd',
+  rnd_manager: '/rnd',
 
   // ═══════════════════════════════════════════
   // TIER 5: SALES & MARKETING
   // ═══════════════════════════════════════════
   lead_manager: '/lead-manager',
-  marketing_manager: '/marketing',
+  marketing_manager: '/marketing-manager',
   seo_manager: '/seo',
   client_success: '/client-success',
-  performance_manager: '/performance',
+  performance_manager: '/performance-manager',
 
   // ═══════════════════════════════════════════
   // TIER 6: SUPPORT & SERVICE
@@ -71,15 +72,16 @@ const ROLE_DASHBOARD_MAP: Record<string, string> = {
   // TIER 8: OPERATIONS & COMPLIANCE
   // ═══════════════════════════════════════════
   task_manager: '/task-manager',
-  finance_manager: '/finance',
+  finance_manager: '/finance-manager',
   hr_manager: '/hr',
-  legal_compliance: '/legal',
+  legal_compliance: '/legal-manager',
 
   // ═══════════════════════════════════════════
   // TIER 9: END USER ROLES
   // ═══════════════════════════════════════════
   prime: '/prime',
-  client: '/user/dashboard',
+  client: '/user-dashboard',
+  user: '/user-dashboard',
 };
 
 /**
@@ -129,8 +131,8 @@ const Dashboard = () => {
       return () => clearTimeout(timeoutId);
     }
 
-    // BOSS OWNER: Goes to the single Command Center (merged boss/super/admin)
-    if (isBossOwner) {
+    // Boss owner only: Global Control Center
+    if (userRole === 'boss_owner' || userRole === 'master') {
       console.log('[Dashboard] Boss Owner → /boss');
       setStatus('redirecting');
       hasNavigated.current = true;
@@ -138,12 +140,13 @@ const Dashboard = () => {
       return;
     }
 
-    // CEO: Goes to the same Command Center
-    if (isCEO) {
-      console.log('[Dashboard] CEO → /boss');
+    // Privileged non-owner roles get their own dashboards, never /boss
+    if (userRole === 'super_admin' || userRole === 'ceo' || userRole === 'admin') {
+      const targetRoute = resolveHome(userRole);
+      console.log(`[Dashboard] ${userRole} → ${targetRoute}`);
       setStatus('redirecting');
       hasNavigated.current = true;
-      navigate('/boss', { replace: true });
+      navigate(targetRoute, { replace: true });
       return;
     }
 
@@ -172,7 +175,7 @@ const Dashboard = () => {
       hasNavigated.current = true;
       navigate('/pending-approval', { replace: true });
     }
-  }, [user, userRole, approvalStatus, loading, isPrivileged, navigate]);
+  }, [user, userRole, approvalStatus, loading, navigate]);
 
   // Reset navigation flag when user changes (logout/login cycle)
   useEffect(() => {
